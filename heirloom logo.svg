@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1256.66 264.41"><metadata><?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?><x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="XMP Core 6.0.0"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmpMM:DocumentID="xmp.did:cb9f5498-bb58-4572-8043-8c369e6bfb9b" xmpMM:InstanceID="xmp.iid:cb9f5498-bb58-4572-8043-8c369e6bfb9b" dcterms:provenance="https://cai-manifests.adobe.com/manifests/urn-c2pa-bbf5aee4-31d5-4cc9-b42c-d5bb2bd348d7-adobe"> </rdf:Description></rdf:RDF></x:xmpmeta>
+<?xpacket end="w"?></metadata>
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient-7);
+      }
+
+      .cls-2 {
+        fill: url(#linear-gradient-5);
+      }
+
+      .cls-3 {
+        fill: url(#linear-gradient-6);
+      }
+
+      .cls-4 {
+        fill: url(#linear-gradient-4);
+      }
+
+      .cls-5 {
+        fill: url(#linear-gradient-3);
+      }
+
+      .cls-6 {
+        fill: url(#linear-gradient-2);
+      }
+
+      .cls-7 {
+        fill: url(#linear-gradient);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="126.49" y1="199.26" x2="126.49" y2="81.8" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#67696b"/>
+      <stop offset=".13" stop-color="#898b8c"/>
+      <stop offset=".41" stop-color="#e1e2e2"/>
+      <stop offset=".5" stop-color="#fff"/>
+      <stop offset=".94" stop-color="#7b7b7e"/>
+      <stop offset="1" stop-color="#67686b"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="288.9" x2="288.9" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-3" x1="399.39" x2="399.39" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-4" x1="524.3" x2="524.3" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-5" x1="671.37" x2="671.37" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-6" x1="1118.27" x2="1118.27" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-7" x1="873.02" y1="201.49" x2="873.02" y2="78.46" xlink:href="#linear-gradient"/>
+  </defs>
+  <path class="cls-7" d="M77.41,199.26v-117.45h12.42v117.45h-12.42ZM88.48,145.06v-10.91h76.01v10.91h-76.01ZM163.32,199.26v-117.45h12.25v117.45h-12.25Z"/>
+  <path class="cls-6" d="M247.37,199.26v-117.45h80.54v10.74h-68.12v95.98h70.64v10.74h-83.06ZM258.45,144.89v-10.57h62.08v10.57h-62.08Z"/>
+  <path class="cls-5" d="M393.18,199.26v-117.45h12.42v117.45h-12.42Z"/>
+  <path class="cls-4" d="M477.41,199.26v-117.45h43.96c14.88,0,26.6,3.55,35.15,10.65,8.56,7.11,12.84,16.98,12.84,29.62,0,8.28-1.93,15.41-5.79,21.39-3.86,5.99-9.37,10.57-16.53,13.76-7.16,3.19-15.72,4.78-25.67,4.78h-37.08l5.54-5.7v42.95h-12.42ZM489.82,157.31l-5.54-5.87h36.75c11.74,0,20.66-2.57,26.76-7.72,6.1-5.14,9.15-12.36,9.15-21.64s-3.05-16.67-9.15-21.81c-6.1-5.14-15.02-7.72-26.76-7.72h-36.75l5.54-5.87v70.64ZM557.61,199.26l-30.2-42.62h13.42l30.37,42.62h-13.59Z"/>
+  <path class="cls-2" d="M632.27,199.26v-117.45h12.42v106.71h65.77v10.74h-78.19Z"/>
+  <path class="cls-3" d="M1057.28,199.26v-117.45h10.24l53.69,91.61h-5.37l53.19-91.61h10.24v117.45h-11.91v-98.83h2.85l-48.99,83.89h-5.87l-49.33-83.89h3.19v98.83h-11.91Z"/>
+  <path class="cls-1" d="M973.01,188.25c-26.45,22.03-61.55,15.42-80.97-11.86l-50.38-70.8c-14.55-20.45-42.51-24.41-61.76-8.02-24.58,20.94-25.2,58.82-2.59,81.14,16.14,15.94,40.21,17.79,58.35,4.8,16.65-11.92,18.28-24.95,25.36-21.94,9.18,3.91-9.24,29.07-33.06,37.04-25.81,8.64-54.27-2.72-68-26.66-13.36-23.31-10.85-52.57,5.92-73.32,11.47-14.18,28.37-21.43,46.29-19.99,16.37,1.31,31.75,10.53,42.01,25.03l51.5,72.73c13.84,19.54,41.35,21.23,59.69,6.15,24.25-19.94,26.99-55.95,6.18-79.15-16.83-18.76-43.91-18.98-61.59-2.08l-11.69,14.19c-1.79,2.18-4.49,2.86-6.64,1.63-1.58-.9-3.36-3.05-1.95-5.79,9.86-19.11,28.96-32.54,51.24-31.56,28.84,1.27,50.47,24.25,53.32,52.44,2.19,21.64-4.89,42.4-21.24,56.02Z"/>
+</svg>

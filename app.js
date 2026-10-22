@@ -5,10 +5,9 @@
 
 // Global State
 const state = {
+  currentView: 'landing', // 'landing' | 'dashboard'
   currentChild: 'leo',
-  audioEnabled: false,
-  audioCtx: null,
-  simulating: false,
+  lenis: null,
   charts: {
     radar: null,
     roi: null
@@ -30,17 +29,50 @@ const childrenData = {
     projectedStart: "Age 12.6",
     accreditationPct: "92.4%",
     timeToPractice: "42 DAYS",
+    cognitiveRank: "COGNITIVE RANK: TOP 0.08% (14 / 18,420)",
     voiceQuote: "\"Leo views surgical diligence as the natural expression of filial gratitude. Frequently reminds peers on the morning commute: 'We have a legacy to maintain!' No external coercion detected; ambition is entirely self-motivated.\"",
     prompter: "ELARA (Advisory Firm: Tan & Partners Family Office)",
     cohort: "Cohort Alpha (100% Retained Legacy)",
-    dockQueue: "Micro-Vascular IV",
+    dockUnitId: "HLM-V-99420-SG",
     radarLabels: ["Surgical Dexterity", "Diagnostic Reflex", "Clinical Decorum", "Anatomical Memory", "Stress Dampening", "Peer Leadership"],
     radarValues: [98.4, 96.2, 94.0, 99.1, 92.5, 95.8],
-    tree: [
-      { gen: "GEN 01", name: "Prof. K.L. Tan, MBBS, FRCS", title: "Emeritus Chief, Tan Tock Seng & Mount Elizabeth Hospital", transmitted: "Foundational Surgical Discipline & Ethical Decorum" },
-      { gen: "GEN 02", name: "Dr. Marcus Tan, MD, FAMS", title: "Senior Consultant Cardiothoracic Surgeon (Father & Donor)", transmitted: "84 Micro-Vascular Bypass Cases & Tactical Triage Reflexes" },
-      { gen: "GEN 03", name: "Leo Tan (Monitored Subject)", title: "MOH Class B Junior Surgical Fellow Candidate", active: true, transmitted: "Active Assimilation (480+ Sleep Transmission Sessions)" }
-    ],
+    familyTree: {
+      gen01: [
+        {
+          name: "Prof. K.L. Tan, MBBS, FRCS",
+          role: "Emeritus Chief of Surgery",
+          initials: "KLT",
+          transmitted: "Foundational Surgical Discipline & Ethical Decorum"
+        },
+        {
+          name: "Dr. Margaret Tan",
+          role: "Dynasty Co-Founder & Trustee",
+          initials: "MLT",
+          transmitted: "Medical Trust Administration"
+        }
+      ],
+      gen02: [
+        {
+          name: "Dr. Marcus Tan, MD, FAMS",
+          role: "Senior Consultant Cardiothoracic Surgeon (Father)",
+          initials: "MT",
+          isPrimaryDonor: true,
+          transmitted: "84 Micro-Vascular Bypass Cases & Tactical Triage"
+        },
+        {
+          name: "Dr. Evelyn Tan, MD",
+          role: "Clinical Director (Mother)",
+          initials: "ET",
+          transmitted: "Surgical Governance & Hospital Boardroom Decorum"
+        }
+      ],
+      gen03: {
+        name: "Leo Tan (陈宇航)",
+        role: "MOH Class B Junior Surgical Fellow Candidate",
+        avatar: "assets/child_a_leo.png",
+        transmitted: "Active Assimilation (480+ Sleep Transmission Sessions)"
+      }
+    },
     education: [
       { bullet: "Age 6–8:", desc: "<strong>Cognitive Receptive Priming:</strong> Neuro-elastic memory pathways conditioned for high-density nocturnal data ingestion." },
       { bullet: "Age 9–11:", desc: "<strong>Pathology & Surgical Anatomy Ingestion:</strong> Equivalent to NUS Medical School Years 1–3 compressed into 24 months of sleep." },
@@ -67,8 +99,6 @@ const childrenData = {
       { age: "Age 12 (Current)", moe: "PSLE Examination (Exempted by MOE)", heirloom: "Active Hands-on Surgical Simulation & Live Observation", equiv: "Clinical Residency Year 1", status: "Active (92%)" },
       { age: "Age 13–15 (Secondary 1–3)", moe: "O-Levels Curriculum (Bypassed)", heirloom: "Independent Departmental Shift Coverage & Senior Practice", equiv: "Full Specialist Attending", status: "Scheduled" }
     ],
-    telemetryPkg: "Module 44: Micro-Vascular Suturing & Anastomosis",
-    telemetryDonor: "Archived Donor: Dr. Marcus Tan (Recorded 2024–2025 during 84 open-heart cases)",
     defaultInvestment: 380000,
     defaultPracticeAge: 12.6,
     defaultStartingSalary: 260000,
@@ -88,17 +118,50 @@ const childrenData = {
     projectedStart: "Age 11.8",
     accreditationPct: "87.0%",
     timeToPractice: "74 DAYS",
+    cognitiveRank: "COGNITIVE RANK: TOP 0.30% (48 / 16,200)",
     voiceQuote: "\"Danial was observed calibrating drone avionics sensor arrays during recess at school. Eagerly affirmed his family creed: 'Our family has safeguarded Singapore skies for thirty years. Why wait until university to take the flight controls?'\"",
     prompter: "GARUDA (Advisory Firm: Rahim Aerospace Family Office)",
     cohort: "Cohort Beta (Aerospace & Systems Lead)",
-    dockQueue: "Turbofan Sensor Fusion IV",
+    dockUnitId: "HLM-V-88102-SG",
     radarLabels: ["Avionics Architecture", "Aerodynamics Reflex", "Autonomous Triage", "Turbine Telemetry", "Stress Dampening", "Defense Protocol"],
     radarValues: [97.5, 95.1, 98.6, 96.2, 93.0, 89.4],
-    tree: [
-      { gen: "GEN 01", name: "Capt. Rahim bin Osman", title: "Chief Test Pilot & Founder, Rahim Precision Engineering", transmitted: "35 Years of Combat Flight Intuition & Jet Dynamics" },
-      { gen: "GEN 02", name: "Ir. Iskandar bin Rahim, P.Eng", title: "Chief Aeronautical Architect, Seletar Aerospace Hub (Father)", transmitted: "Supersonic Autonomous Guidance & Sensor Fusion" },
-      { gen: "GEN 03", name: "Danial bin Rahim (Monitored Subject)", title: "CAAS Junior Autonomous Avionics Engineer Candidate", active: true, transmitted: "Active Assimilation (390+ Sleep Transmission Sessions)" }
-    ],
+    familyTree: {
+      gen01: [
+        {
+          name: "Capt. Rahim bin Osman",
+          role: "Chief Test Pilot & Aviation Founder",
+          initials: "RO",
+          transmitted: "35 Years of Combat Flight Intuition & Jet Dynamics"
+        },
+        {
+          name: "Hajah Fatimah Rahim",
+          role: "Aviation Trustee & Executive Director",
+          initials: "FR",
+          transmitted: "Hangar Infrastructure Capital Governance"
+        }
+      ],
+      gen02: [
+        {
+          name: "Ir. Iskandar bin Rahim, P.Eng",
+          role: "Chief Aeronautical Architect (Father)",
+          initials: "IR",
+          isPrimaryDonor: true,
+          transmitted: "Supersonic Autonomous Guidance & Sensor Fusion"
+        },
+        {
+          name: "Dr. Nurul Rahim",
+          role: "Autonomous Defense Analyst (Mother)",
+          initials: "NR",
+          transmitted: "Defense Telemetry & Swarm Cryptography"
+        }
+      ],
+      gen03: {
+        name: "Danial bin Rahim (دانيال بن رحيم)",
+        role: "CAAS Junior Autonomous Avionics Engineer Candidate",
+        avatar: "assets/child_b_danial.png",
+        transmitted: "Active Assimilation (390+ Sleep Transmission Sessions)"
+      }
+    },
     education: [
       { bullet: "Age 6–7:", desc: "<strong>Aerodynamic Intuition Acceleration:</strong> Calculus, fluid dynamics, and flight kinematics internalized via sleep transmission." },
       { bullet: "Age 8–10:", desc: "<strong>Avionics Guidance & Embedded Firmware:</strong> Bypassed standard primary curriculum to master unmanned flight systems and turbine mechanics." },
@@ -125,8 +188,6 @@ const childrenData = {
       { age: "Age 11 (Current)", moe: "Primary School Leaving Prep", heirloom: "Seletar Aerospace Hangar Practicum & Flight Line Telemetry", equiv: "Associate Avionics Engineer", status: "Active (87%)" },
       { age: "Age 12–14 (Secondary 1–2)", moe: "Secondary Express Stream", heirloom: "Autonomous Defense Swarm Coordination & Flight Testing", equiv: "Lead Systems Architect", status: "Scheduled" }
     ],
-    telemetryPkg: "Module 38: Supersonic Flow & Stall Recovery Reflexes",
-    telemetryDonor: "Archived Donor: Ir. Iskandar bin Rahim, P.Eng (Recorded during 2024–2025 Flight Trials)",
     defaultInvestment: 320000,
     defaultPracticeAge: 11.8,
     defaultStartingSalary: 310000,
@@ -146,17 +207,50 @@ const childrenData = {
     projectedStart: "Age 13.2",
     accreditationPct: "95.8%",
     timeToPractice: "28 DAYS",
+    cognitiveRank: "COGNITIVE RANK: TOP 0.04% (7 / 17,500)",
     voiceQuote: "\"Priya voluntarily studies maritime dispute arbitration precedents on her commute. Expresses immense pride in preparing to represent the family's shipping syndicate: 'Generations before me built this port; it is only proper I master its laws now.'\"",
     prompter: "ATHENA (Advisory Firm: Straits Legal & Admiralty Council)",
     cohort: "Cohort Maritime Elite",
-    dockQueue: "Maritime Charterparty Disputes",
+    dockUnitId: "HLM-V-77314-SG",
     radarLabels: ["Statutory Arbitration", "Admiralty Jurisprudence", "Contract Precision", "Freeport Governance", "Negotiation Composure", "Logistics Triage"],
     radarValues: [99.2, 98.4, 97.1, 95.0, 96.5, 94.2],
-    tree: [
-      { gen: "GEN 01", name: "Senior Counsel K. Nair", title: "Admiralty Bar, Supreme Court of Singapore", transmitted: "40 Years of Maritime Dispute Precedents & Cross-Examination" },
-      { gen: "GEN 02", name: "Sharmila Nair, LL.M.", title: "Managing Partner, Nair & Straits Maritime Chambers", transmitted: "Freeport Governance, Green Bunker Tariffs & Charterparty Law" },
-      { gen: "GEN 03", name: "Priya Nair (Monitored Subject)", title: "Singapore Bar Special Successor Licensee Candidate", active: true, transmitted: "Active Assimilation (510+ Sleep Transmission Sessions)" }
-    ],
+    familyTree: {
+      gen01: [
+        {
+          name: "Senior Counsel K. Nair",
+          role: "Supreme Court Admiralty Bar (Grandfather)",
+          initials: "KN",
+          transmitted: "40 Years of Maritime Dispute Precedents & Cross-Examination"
+        },
+        {
+          name: "Devaki Nair",
+          role: "Straits Port Trust Director",
+          initials: "DN",
+          transmitted: "Maritime Trade Treaties & Sovereign Concessions"
+        }
+      ],
+      gen02: [
+        {
+          name: "Sharmila Nair, LL.M.",
+          role: "Managing Partner, Admiralty Chambers (Mother)",
+          initials: "SN",
+          isPrimaryDonor: true,
+          transmitted: "Freeport Governance, Green Bunker Tariffs & Charterparty Law"
+        },
+        {
+          name: "Capt. Ramesh Nair",
+          role: "Jurong Port Fleet Director (Father)",
+          initials: "RN",
+          transmitted: "Container Logistics Triage & Straits Navigation"
+        }
+      ],
+      gen03: {
+        name: "Priya Nair (பிரியா நாயர்)",
+        role: "Singapore Bar Special Successor Licensee Candidate",
+        avatar: "assets/child_c_priya.png",
+        transmitted: "Active Assimilation (510+ Sleep Transmission Sessions)"
+      }
+    },
     education: [
       { bullet: "Age 7–8:", desc: "<strong>Common Law & Precedent Absorption:</strong> Complete Singapore and English Admiralty legal case law ingested during deep NREM sleep." },
       { bullet: "Age 9–11:", desc: "<strong>Cross-Border Maritime Treaty Law:</strong> Internalized UNCLOS, maritime insurance clauses, and Straits of Malacca traffic treaties." },
@@ -183,8 +277,6 @@ const childrenData = {
       { age: "Age 12–13 (Current)", moe: "Secondary School Express", heirloom: "Arbitration Tribunal Practicum & Live SIAC Briefs", equiv: "Associate Litigation Counsel", status: "Active (95%)" },
       { age: "Age 14–16 (Secondary 3–4)", moe: "O-Levels Examination Track", heirloom: "Senior Strategic Governance & Freeport Asset Retention", equiv: "Equity Partner Standing", status: "Scheduled" }
     ],
-    telemetryPkg: "Module 61: Freight Salvage & Collision Precedents",
-    telemetryDonor: "Archived Donor: Senior Counsel K. Nair (Supreme Court Historical Audio & Reflexes)",
     defaultInvestment: 350000,
     defaultPracticeAge: 13.2,
     defaultStartingSalary: 280000,
@@ -194,22 +286,183 @@ const childrenData = {
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
-  // Lucide Icons Render
   if (window.lucide) {
     window.lucide.createIcons();
   }
 
+  initLenis();
+  initGsapAnimations();
+  initViewSwitcher();
   initClock();
   initTabs();
-  initAudio();
   initChildSelector();
   initRoiCalculator();
-  initBrainwaveCanvas();
   initModals();
 
   // Load Leo Tan default profile
   loadChildProfile('leo');
 });
+
+/**
+ * Initialize Lenis Smooth Scrolling (https://lenis.dev/)
+ */
+function initLenis() {
+  if (typeof Lenis !== 'undefined') {
+    state.lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true
+    });
+
+    function raf(time) {
+      if (state.lenis) state.lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Sync Lenis with GSAP ScrollTrigger if present
+    if (typeof ScrollTrigger !== 'undefined' && state.lenis) {
+      state.lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => {
+        state.lenis.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+    }
+  }
+}
+
+/**
+ * Initialize GSAP Animations (https://gsap.com/)
+ */
+function initGsapAnimations() {
+  if (typeof gsap !== 'undefined') {
+    // Hero Entrance Animations
+    gsap.from('.gsap-hero', {
+      opacity: 0,
+      y: 35,
+      stagger: 0.15,
+      duration: 1,
+      ease: 'power3.out'
+    });
+
+    // ScrollTrigger Batch Reveals
+    if (typeof ScrollTrigger !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+
+      gsap.utils.toArray('.gsap-reveal').forEach((el) => {
+        gsap.from(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          },
+          opacity: 0,
+          y: 40,
+          duration: 0.9,
+          ease: 'power3.out'
+        });
+      });
+    }
+  }
+}
+
+/**
+ * View Switcher: Toggle between Executive Overview (Landing) & Successor Monitor (Dashboard)
+ */
+function initViewSwitcher() {
+  const btnOverview = document.getElementById('btnViewOverview');
+  const btnPortal = document.getElementById('btnViewPortal');
+  const navLogo = document.getElementById('navLogoBtn');
+
+  if (btnOverview) btnOverview.addEventListener('click', () => switchView('landing'));
+  if (btnPortal) btnPortal.addEventListener('click', () => switchView('dashboard'));
+  if (navLogo) {
+    navLogo.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchView('landing');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // Anchor navigation highlighting & smooth scrolling
+  const landingNavLinks = document.querySelectorAll('.landing-nav-link');
+  landingNavLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const targetId = link.getAttribute('href');
+      if (targetId && targetId.startsWith('#')) {
+        e.preventDefault();
+        if (state.currentView !== 'landing') {
+          switchView('landing');
+        }
+        const targetEl = document.querySelector(targetId);
+        if (targetEl) {
+          if (state.lenis) {
+            state.lenis.scrollTo(targetEl, { offset: -70 });
+          } else {
+            targetEl.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+        landingNavLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  });
+}
+
+function switchView(viewName, targetTab = null, childKey = null) {
+  state.currentView = viewName;
+  const viewLanding = document.getElementById('view-landing');
+  const viewDashboard = document.getElementById('view-dashboard');
+  const btnOverview = document.getElementById('btnViewOverview');
+  const btnPortal = document.getElementById('btnViewPortal');
+  const landingNav = document.getElementById('landingNavLinks');
+  const headerSubject = document.getElementById('headerSubjectWrapper');
+
+  if (childKey) {
+    loadChildProfile(childKey);
+    const sel = document.getElementById('childSelector');
+    if (sel) sel.value = childKey;
+  }
+
+  if (viewName === 'landing') {
+    if (viewLanding) viewLanding.style.display = 'block';
+    if (viewDashboard) viewDashboard.style.display = 'none';
+    if (btnOverview) btnOverview.classList.add('active');
+    if (btnPortal) btnPortal.classList.remove('active');
+    if (landingNav) landingNav.style.display = 'flex';
+    if (headerSubject) headerSubject.style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    if (viewLanding) viewLanding.style.display = 'none';
+    if (viewDashboard) viewDashboard.style.display = 'block';
+    if (btnOverview) btnOverview.classList.remove('active');
+    if (btnPortal) btnPortal.classList.add('active');
+    if (landingNav) landingNav.style.display = 'none';
+    if (headerSubject) headerSubject.style.display = 'flex';
+
+    if (targetTab) {
+      const navBtn = document.querySelector(`.sidebar-nav .nav-item[data-tab="${targetTab}"]`);
+      if (navBtn) navBtn.click();
+    }
+
+    // Refresh charts when entering dashboard
+    setTimeout(() => {
+      if (state.charts.radar) state.charts.radar.resize();
+      if (state.charts.roi) state.charts.roi.resize();
+    }, 100);
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (window.lucide) window.lucide.createIcons();
+}
+
+/**
+ * Direct Shortcut from Pathway Cards on Overview Page to Specific Child Dossier
+ */
+function jumpToChildProfile(childKey) {
+  switchView('dashboard', 'overview', childKey);
+}
 
 /**
  * Clock in Singapore Standard Time
@@ -218,7 +471,6 @@ function initClock() {
   const clockEl = document.getElementById('liveClock');
   function updateTime() {
     const now = new Date();
-    // Format in Singapore Time (UTC+8)
     const options = { timeZone: 'Asia/Singapore', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
     const timeStr = now.toLocaleTimeString('en-GB', options);
     if (clockEl) clockEl.innerText = `${timeStr} SGT`;
@@ -236,7 +488,6 @@ function initTabs() {
 
   navButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      playUiBeep(620, 0.05);
       const tabId = btn.dataset.tab;
 
       navButtons.forEach(b => b.classList.remove('active'));
@@ -248,7 +499,6 @@ function initTabs() {
         targetPanel.classList.add('active');
       }
 
-      // Re-trigger layout or chart redraw if needed
       if (tabId === 'overview' && state.charts.radar) {
         state.charts.radar.resize();
       } else if (tabId === 'roi-calculator' && state.charts.roi) {
@@ -259,54 +509,12 @@ function initTabs() {
 }
 
 /**
- * Web Audio API - Tactile Clinical Feedback
- */
-function initAudio() {
-  const soundBtn = document.getElementById('soundToggleBtn');
-  const soundIcon = document.getElementById('soundIcon');
-
-  soundBtn.addEventListener('click', () => {
-    state.audioEnabled = !state.audioEnabled;
-    if (state.audioEnabled) {
-      if (!state.audioCtx) {
-        state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      playUiBeep(880, 0.08);
-      soundBtn.style.color = '#d4af37';
-      soundBtn.style.borderColor = '#d4af37';
-    } else {
-      soundBtn.style.color = '';
-      soundBtn.style.borderColor = '';
-    }
-  });
-}
-
-function playUiBeep(freq = 600, duration = 0.08) {
-  if (!state.audioEnabled || !state.audioCtx) return;
-  try {
-    const osc = state.audioCtx.createOscillator();
-    const gain = state.audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, state.audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.04, state.audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, state.audioCtx.currentTime + duration);
-    osc.connect(gain);
-    gain.connect(state.audioCtx.destination);
-    osc.start();
-    osc.stop(state.audioCtx.currentTime + duration);
-  } catch (e) {
-    console.warn(e);
-  }
-}
-
-/**
  * Switch Monitored Successor Profile
  */
 function initChildSelector() {
   const selector = document.getElementById('childSelector');
   selector.addEventListener('change', (e) => {
     const key = e.target.value;
-    playUiBeep(520, 0.06);
     loadChildProfile(key);
   });
 }
@@ -316,9 +524,13 @@ function loadChildProfile(key) {
   const child = childrenData[key];
   if (!child) return;
 
-  // Header stats
+  // Header stats & Cognitive Rank
   document.getElementById('headerTimeToPractice').innerText = child.timeToPractice;
-  document.getElementById('dockQueue').innerText = child.dockQueue;
+  const bannerRank = document.getElementById('bannerCognitiveRank');
+  if (bannerRank) bannerRank.innerText = child.cognitiveRank;
+
+  const dockUnit = document.getElementById('dockUnitId');
+  if (dockUnit) dockUnit.innerText = child.dockUnitId;
 
   // Hero Dossier
   document.getElementById('childAvatarImg').src = child.avatar;
@@ -334,9 +546,6 @@ function loadChildProfile(key) {
   document.getElementById('childAccreditationPct').innerText = child.accreditationPct;
   document.getElementById('childVoiceQuote').innerText = child.voiceQuote;
 
-  // Telemetry Package
-  document.getElementById('telemetryPkgName').innerText = child.telemetryPkg;
-
   // Names in other tabs
   document.getElementById('roiChildName').innerText = child.name.split(' ')[0];
   document.getElementById('certChildName').innerText = child.name.split(' ')[0];
@@ -345,10 +554,9 @@ function loadChildProfile(key) {
   document.getElementById('certActiveTitle').innerText = child.certTitle;
   document.getElementById('certActiveDesc').innerText = child.certDesc;
   document.getElementById('certActivePct').innerText = child.certPct;
-  document.getElementById('modalCertCandidate').innerText = child.certModalCandidate;
 
-  // Render Pedigree Tree
-  renderDynastyTree(child.tree);
+  // Render Visual Family Tree
+  renderFamilyTreeVisual(child.familyTree);
 
   // Render Education Timeline
   renderEducationTimeline(child.education);
@@ -370,26 +578,98 @@ function loadChildProfile(key) {
 }
 
 /**
- * Render Pedigree Tree Nodes
+ * =========================================================================
+ * RENDER FAMILY TREE VISUAL (MATCHING 23ANDME PEDIGREE REFERENCE)
+ * =========================================================================
  */
-function renderDynastyTree(treeData) {
+function renderFamilyTreeVisual(tree) {
   const container = document.getElementById('dynastyTreeContainer');
+  if (!container) return;
   container.innerHTML = '';
 
-  treeData.forEach(node => {
-    const el = document.createElement('div');
-    el.className = `tree-node ${node.active ? 'active-successor' : ''}`;
-    el.innerHTML = `
-      <span class="tree-gen-tag">${node.gen}</span>
-      <div class="tree-info">
-        <h5>${node.name}</h5>
-        <p>${node.title}</p>
-        <span class="tree-transmitted-text text-xs text-gold"><i data-lucide="corner-down-right" class="icon-xs inline"></i> ${node.transmitted}</span>
+  // Level 1: Grandparents
+  const level1 = document.createElement('div');
+  level1.className = 'tree-level-block';
+  level1.innerHTML = `
+    <span class="level-indicator-tag">GEN 01 — GRANDPARENTS (ARCHIVED LINEAGE)</span>
+    <div class="tree-nodes-row couple-row">
+      <div class="ft-node">
+        <div class="ft-circle-avatar">
+          <span class="ft-avatar-initials">${tree.gen01[0].initials}</span>
+        </div>
+        <h5 class="ft-name">${tree.gen01[0].name}</h5>
+        <span class="ft-role">${tree.gen01[0].role}</span>
+        <div class="ft-transmitted">
+          <i data-lucide="corner-down-right" class="icon-xs inline text-gold"></i> ${tree.gen01[0].transmitted}
+        </div>
       </div>
-      ${node.active ? '<span class="tree-badge-transmitted"><span class="pulse-dot green"></span> ACTIVE RECIPIENT</span>' : ''}
-    `;
-    container.appendChild(el);
-  });
+      <div class="ft-node">
+        <div class="ft-circle-avatar">
+          <span class="ft-avatar-initials">${tree.gen01[1].initials}</span>
+        </div>
+        <h5 class="ft-name">${tree.gen01[1].name}</h5>
+        <span class="ft-role">${tree.gen01[1].role}</span>
+        <div class="ft-transmitted">
+          <i data-lucide="corner-down-right" class="icon-xs inline text-gold"></i> ${tree.gen01[1].transmitted}
+        </div>
+      </div>
+    </div>
+    <div class="tree-stem-connector"></div>
+  `;
+
+  // Level 2: Parents
+  const level2 = document.createElement('div');
+  level2.className = 'tree-level-block';
+  level2.innerHTML = `
+    <span class="level-indicator-tag">GEN 02 — PARENTS (PRIMARY KNOWLEDGE DONORS)</span>
+    <div class="tree-nodes-row couple-row">
+      <div class="ft-node ${tree.gen02[0].isPrimaryDonor ? 'border-gold' : ''}">
+        <div class="ft-circle-avatar">
+          <span class="ft-avatar-initials">${tree.gen02[0].initials}</span>
+        </div>
+        <h5 class="ft-name">${tree.gen02[0].name}</h5>
+        <span class="ft-role">${tree.gen02[0].role}</span>
+        <div class="ft-transmitted">
+          <i data-lucide="zap" class="icon-xs inline text-gold"></i> ${tree.gen02[0].transmitted}
+        </div>
+      </div>
+      <div class="ft-node ${tree.gen02[1].isPrimaryDonor ? 'border-gold' : ''}">
+        <div class="ft-circle-avatar">
+          <span class="ft-avatar-initials">${tree.gen02[1].initials}</span>
+        </div>
+        <h5 class="ft-name">${tree.gen02[1].name}</h5>
+        <span class="ft-role">${tree.gen02[1].role}</span>
+        <div class="ft-transmitted">
+          <i data-lucide="zap" class="icon-xs inline text-gold"></i> ${tree.gen02[1].transmitted}
+        </div>
+      </div>
+    </div>
+    <div class="tree-stem-connector"></div>
+  `;
+
+  // Level 3: Subject (Child)
+  const level3 = document.createElement('div');
+  level3.className = 'tree-level-block';
+  level3.innerHTML = `
+    <span class="level-indicator-tag">GEN 03 — MONITORED SUCCESSOR (RECIPIENT)</span>
+    <div class="tree-nodes-row">
+      <div class="ft-node active-subject">
+        <div class="ft-circle-avatar">
+          <img src="${tree.gen03.avatar}" alt="${tree.gen03.name}">
+        </div>
+        <h5 class="ft-name">${tree.gen03.name}</h5>
+        <span class="ft-role">${tree.gen03.role}</span>
+        <span class="ft-recipient-badge"><span class="pulse-dot green"></span> ACTIVE RECIPIENT</span>
+        <div class="ft-transmitted mt-2">
+          <i data-lucide="check-circle" class="icon-xs inline text-emerald"></i> ${tree.gen03.transmitted}
+        </div>
+      </div>
+    </div>
+  `;
+
+  container.appendChild(level1);
+  container.appendChild(level2);
+  container.appendChild(level3);
 
   if (window.lucide) window.lucide.createIcons();
 }
@@ -399,6 +679,7 @@ function renderDynastyTree(treeData) {
  */
 function renderEducationTimeline(eduData) {
   const container = document.getElementById('eduTimeline');
+  if (!container) return;
   container.innerHTML = '';
   eduData.forEach(item => {
     const li = document.createElement('li');
@@ -416,6 +697,7 @@ function renderEducationTimeline(eduData) {
  */
 function renderCertificationsGrid(certs) {
   const container = document.getElementById('certificationsGrid');
+  if (!container) return;
   container.innerHTML = '';
 
   certs.forEach(cert => {
@@ -452,6 +734,7 @@ function renderCertificationsGrid(certs) {
  */
 function renderCurriculumTable(rows) {
   const tbody = document.getElementById('curriculumTableBody');
+  if (!tbody) return;
   tbody.innerHTML = '';
   rows.forEach(r => {
     const tr = document.createElement('tr');
@@ -471,6 +754,7 @@ function renderCurriculumTable(rows) {
  */
 function renderTalentBreakdown(labels, values) {
   const container = document.getElementById('talentBreakdownList');
+  if (!container) return;
   container.innerHTML = '';
   labels.forEach((label, i) => {
     const val = values[i];
@@ -493,7 +777,9 @@ function renderTalentBreakdown(labels, values) {
  * Radar Chart (Chart.js)
  */
 function updateRadarChart(labels, values) {
-  const ctx = document.getElementById('talentsRadarChart').getContext('2d');
+  const chartCanvas = document.getElementById('talentsRadarChart');
+  if (!chartCanvas) return;
+  const ctx = chartCanvas.getContext('2d');
 
   if (state.charts.radar) {
     state.charts.radar.data.labels = labels;
@@ -563,7 +849,7 @@ function updateRadarChart(labels, values) {
 
 /**
  * =========================================================================
- * GENERATIONAL ROI & SUCCESSION YIELD CALCULATOR ENGINE (3B)
+ * GENERATIONAL ROI & SUCCESSION YIELD CALCULATOR ENGINE
  * =========================================================================
  */
 function initRoiCalculator() {
@@ -577,55 +863,56 @@ function initRoiCalculator() {
 
   const inputs = [inputInvestment, inputPracticeAge, inputStartingSalary, inputTuitionSaved, toggleInflation, toggleSocialPrestige];
   inputs.forEach(input => {
-    input.addEventListener('input', () => {
-      playUiBeep(480, 0.04);
-      updateRoiCalculations();
+    if (input) {
+      input.addEventListener('input', updateRoiCalculations);
+    }
+  });
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      const child = childrenData[state.currentChild];
+      if (child) syncRoiDefaultsForChild(child);
     });
-  });
+  }
 
-  resetBtn.addEventListener('click', () => {
-    const child = childrenData[state.currentChild];
-    if (child) syncRoiDefaultsForChild(child);
-  });
-
-  // Initial Calculation
   updateRoiCalculations();
 }
 
 function syncRoiDefaultsForChild(child) {
-  document.getElementById('inputInvestment').value = child.defaultInvestment;
-  document.getElementById('inputPracticeAge').value = child.defaultPracticeAge;
-  document.getElementById('inputStartingSalary').value = child.defaultStartingSalary;
-  document.getElementById('inputTuitionSaved').value = child.defaultTuitionSaved;
+  const inputInvestment = document.getElementById('inputInvestment');
+  const inputPracticeAge = document.getElementById('inputPracticeAge');
+  const inputStartingSalary = document.getElementById('inputStartingSalary');
+  const inputTuitionSaved = document.getElementById('inputTuitionSaved');
+
+  if (inputInvestment) inputInvestment.value = child.defaultInvestment;
+  if (inputPracticeAge) inputPracticeAge.value = child.defaultPracticeAge;
+  if (inputStartingSalary) inputStartingSalary.value = child.defaultStartingSalary;
+  if (inputTuitionSaved) inputTuitionSaved.value = child.defaultTuitionSaved;
   updateRoiCalculations();
 }
 
 function updateRoiCalculations() {
-  const investment = parseFloat(document.getElementById('inputInvestment').value);
+  const inputInvestment = document.getElementById('inputInvestment');
+  if (!inputInvestment) return;
+
+  const investment = parseFloat(inputInvestment.value);
   const practiceAge = parseFloat(document.getElementById('inputPracticeAge').value);
   const startingSalary = parseFloat(document.getElementById('inputStartingSalary').value);
   const tuitionSaved = parseFloat(document.getElementById('inputTuitionSaved').value);
   const useCompound = document.getElementById('toggleInflation').checked;
   const usePrestige = document.getElementById('toggleSocialPrestige').checked;
 
-  // Update slider label readouts
   document.getElementById('valInvestment').innerText = `$${investment.toLocaleString()} SGD`;
   document.getElementById('valPracticeAge').innerText = `Age ${practiceAge.toFixed(1)}`;
   document.getElementById('valStartingSalary').innerText = `$${startingSalary.toLocaleString()} SGD/yr`;
   document.getElementById('valTuitionSaved').innerText = `$${tuitionSaved.toLocaleString()} SGD`;
 
-  // Actuarial Assumptions
-  const traditionalStartAge = 28.0; // Standard Singapore Doctor / Quant Partner / Senior Lawyer age
+  const traditionalStartAge = 28.0;
   const yearsGained = Math.max(0, traditionalStartAge - practiceAge);
   const effectiveSalary = usePrestige ? startingSalary * 1.20 : startingSalary;
 
-  // Break-even Age calculation:
-  // Net cash outflow = investment.
-  // Net immediate offset = tuitionSaved (bypassed private schools, junior colleges, overseas fees).
-  // If tuitionSaved > investment, break-even is achieved almost before practice starts!
-  // Otherwise, break-even occurs shortly after beginning practice.
   let breakEvenAge = practiceAge;
-  const netDeficit = investment - (tuitionSaved * 0.4); // 40% of tuition savings realized upfront
+  const netDeficit = investment - (tuitionSaved * 0.4);
   if (netDeficit <= 0) {
     breakEvenAge = Math.min(practiceAge, 11.2);
   } else {
@@ -633,27 +920,21 @@ function updateRoiCalculations() {
     breakEvenAge = practiceAge + yearsToRecover;
   }
 
-  // Update highlight pillars
   document.getElementById('kpiBreakEvenAge').innerText = `AGE ${breakEvenAge.toFixed(1)}`;
   document.getElementById('statYearsGained').innerText = `+${yearsGained.toFixed(1)} Yrs`;
 
-  // Total Family Net Gain by Age 30
-  // Simulate from Age 10 to Age 30:
   let heirloomCumulative = -investment + tuitionSaved;
   let traditionalCumulative = 0;
 
   const ages = [];
   const heirloomSeries = [];
   const traditionalSeries = [];
-
   const annualGrowthRate = useCompound ? 0.055 : 0.0;
 
   for (let age = 10; age <= 30; age++) {
     ages.push(`Age ${age}`);
 
-    // Heirloom trajectory:
     if (age >= practiceAge) {
-      // Annual salary escalates 6% per year with experience
       const yearsInPractice = age - practiceAge;
       const currentYearSalary = effectiveSalary * Math.pow(1.06, yearsInPractice);
       heirloomCumulative += currentYearSalary;
@@ -662,13 +943,10 @@ function updateRoiCalculations() {
       heirloomCumulative *= (1 + annualGrowthRate);
     }
 
-    // Traditional trajectory:
     if (age >= 10 && age < traditionalStartAge) {
-      // Still paying for schooling / university
       const annualTuitionCost = tuitionSaved / (traditionalStartAge - 10);
       traditionalCumulative -= annualTuitionCost;
     } else if (age >= traditionalStartAge) {
-      // Traditional practitioner starts junior salary
       const yearsInTraditional = age - traditionalStartAge;
       traditionalCumulative += (startingSalary * 0.85) * Math.pow(1.04, yearsInTraditional);
     }
@@ -685,12 +963,13 @@ function updateRoiCalculations() {
   document.getElementById('statWealthMultiplier').innerText = `${multiplier}×`;
   document.getElementById('statTotalNetGain').innerText = `$${Math.round(netSurplus).toLocaleString()} SGD`;
 
-  // Update or render Chart
   renderRoiComparisonChart(ages, heirloomSeries, traditionalSeries);
 }
 
 function renderRoiComparisonChart(labels, heirloomData, traditionalData) {
-  const ctx = document.getElementById('roiComparisonChart').getContext('2d');
+  const chartCanvas = document.getElementById('roiComparisonChart');
+  if (!chartCanvas) return;
+  const ctx = chartCanvas.getContext('2d');
 
   if (state.charts.roi) {
     state.charts.roi.data.labels = labels;
@@ -769,152 +1048,6 @@ function renderRoiComparisonChart(labels, heirloomData, traditionalData) {
 
 /**
  * =========================================================================
- * BRAINWAVE OSCILLOSCOPE CANVAS & NOCTURNAL TRANSMISSION SIMULATION
- * =========================================================================
- */
-let animFrameId = null;
-let wavePhase = 0;
-let waveSpeed = 0.04;
-let waveAmplitude = 18;
-
-function initBrainwaveCanvas() {
-  const canvas = document.getElementById('brainwaveCanvas');
-  const ctx = canvas.getContext('2d');
-
-  function resizeCanvas() {
-    canvas.width = canvas.parentElement.clientWidth;
-    canvas.height = canvas.parentElement.clientHeight;
-  }
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const width = canvas.width;
-    const height = canvas.height;
-    const centerY = height / 2;
-
-    // Draw grid lines
-    ctx.strokeStyle = 'rgba(6, 182, 212, 0.06)';
-    ctx.lineWidth = 1;
-    for (let x = 0; x < width; x += 40) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, height);
-      ctx.stroke();
-    }
-    for (let y = 0; y < height; y += 30) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
-      ctx.stroke();
-    }
-
-    // Draw primary synaptic delta wave (Golden Heirloom transmission wave)
-    ctx.beginPath();
-    ctx.lineWidth = 2.5;
-    ctx.strokeStyle = state.simulating ? '#22d3ee' : '#d4af37';
-
-    for (let x = 0; x < width; x++) {
-      const freq1 = 0.015;
-      const freq2 = 0.04;
-      const y = centerY +
-        Math.sin(x * freq1 + wavePhase) * waveAmplitude +
-        Math.sin(x * freq2 + wavePhase * 1.5) * (waveAmplitude * 0.4) +
-        (state.simulating ? (Math.random() - 0.5) * 4 : 0);
-
-      if (x === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-
-    // Draw secondary parental donor harmonic wave (Cyan overlay)
-    ctx.beginPath();
-    ctx.lineWidth = 1.2;
-    ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
-    for (let x = 0; x < width; x++) {
-      const y = centerY + Math.sin(x * 0.025 + wavePhase * 0.8) * (waveAmplitude * 0.6);
-      if (x === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-
-    wavePhase += waveSpeed;
-    animFrameId = requestAnimationFrame(draw);
-  }
-
-  draw();
-
-  // Attach simulation triggers
-  const liveSimBtn = document.getElementById('liveSimulateBtn');
-  const quickSimBtn = document.getElementById('quickSimulateBtn');
-
-  [liveSimBtn, quickSimBtn].forEach(btn => {
-    if (btn) btn.addEventListener('click', runTransmissionSimulation);
-  });
-}
-
-function runTransmissionSimulation() {
-  if (state.simulating) return;
-  state.simulating = true;
-  playUiBeep(920, 0.2);
-
-  const waveOverlay = document.getElementById('waveStatusText');
-  const freqIndicator = document.getElementById('freqIndicator');
-  const telemetryLogs = document.getElementById('telemetryLogs');
-  const pkgBar = document.getElementById('telemetryPkgBar');
-  const pkgPct = document.getElementById('telemetryPkgPct');
-
-  waveAmplitude = 34;
-  waveSpeed = 0.09;
-  waveOverlay.innerText = "TRANSMISSION ACTIVE — PASSING DONOR SYNAPTIC PATTERNS";
-  waveOverlay.style.color = "#22d3ee";
-  freqIndicator.innerText = "SYNAPTIC BURST 4.8 Hz — INGESTION IN PROGRESS";
-
-  // Simulate progress increase
-  let progress = 88;
-  const timer = setInterval(() => {
-    if (progress < 99) {
-      progress += 2;
-      pkgBar.style.width = `${progress}%`;
-      pkgPct.innerText = `${progress}% (4.7 / 4.8 GB)`;
-      playUiBeep(700 + progress * 5, 0.04);
-    }
-  }, 400);
-
-  // Append live log
-  const now = new Date().toLocaleTimeString('en-GB');
-  const logDiv = document.createElement('div');
-  logDiv.className = 'log-entry';
-  logDiv.innerHTML = `
-    <span class="log-time">${now}</span>
-    <span class="log-msg text-cyan">Live Transmission Test: 42.8 MB synaptic micro-reflexes synchronized. Assimilation confirmed.</span>
-  `;
-  telemetryLogs.prepend(logDiv);
-
-  setTimeout(() => {
-    clearInterval(timer);
-    state.simulating = false;
-    waveAmplitude = 18;
-    waveSpeed = 0.04;
-    waveOverlay.innerText = "HEADSET ON STANDBY — DOCKED AT NIGHTSTAND";
-    waveOverlay.style.color = "rgba(212, 175, 55, 0.7)";
-    freqIndicator.innerText = "DELTA 1.4 Hz — DEEP INGESTION SYNC";
-    pkgBar.style.width = `99.8%`;
-    pkgPct.innerText = `99.8% (4.8 / 4.8 GB)`;
-
-    const endLog = document.createElement('div');
-    endLog.className = 'log-entry';
-    endLog.innerHTML = `
-      <span class="log-time">${new Date().toLocaleTimeString('en-GB')}</span>
-      <span class="log-msg text-emerald">Session verified. Zero synaptic rejection observed. Filial alignment index: 99.8%.</span>
-    `;
-    telemetryLogs.prepend(endLog);
-  }, 3200);
-}
-
-/**
- * =========================================================================
  * MODALS & LIGHTBOXES
  * =========================================================================
  */
@@ -936,17 +1069,24 @@ function initModals() {
   }
 
   // Backdrop close
-  document.getElementById('lightboxModal').addEventListener('click', (e) => {
-    if (e.target.id === 'lightboxModal') closeLightbox();
-  });
-  document.getElementById('certificateModal').addEventListener('click', (e) => {
-    if (e.target.id === 'certificateModal') closeCertModal();
-  });
+  const lbModal = document.getElementById('lightboxModal');
+  if (lbModal) {
+    lbModal.addEventListener('click', (e) => {
+      if (e.target.id === 'lightboxModal') closeLightbox();
+    });
+  }
+
+  const certModal = document.getElementById('certificateModal');
+  if (certModal) {
+    certModal.addEventListener('click', (e) => {
+      if (e.target.id === 'certificateModal') closeCertModal();
+    });
+  }
 }
 
 function openLightbox(imgSrc, title, desc) {
-  playUiBeep(640, 0.06);
   const modal = document.getElementById('lightboxModal');
+  if (!modal) return;
   document.getElementById('lightboxImg').src = imgSrc;
   document.getElementById('lightboxTitle').innerText = title;
   document.getElementById('lightboxDesc').innerText = desc;
@@ -954,20 +1094,16 @@ function openLightbox(imgSrc, title, desc) {
 }
 
 function closeLightbox() {
-  document.getElementById('lightboxModal').classList.remove('open');
+  const modal = document.getElementById('lightboxModal');
+  if (modal) modal.classList.remove('open');
 }
 
 function openCertModal() {
-  playUiBeep(780, 0.08);
-  const child = childrenData[state.currentChild];
-  if (child) {
-    document.getElementById('modalCertCandidate').innerText = child.certModalCandidate;
-    const plaqueDesig = document.querySelector('.plaque-designation');
-    if (plaqueDesig) plaqueDesig.innerText = child.certModalRole;
-  }
-  document.getElementById('certificateModal').classList.add('open');
+  const modal = document.getElementById('certificateModal');
+  if (modal) modal.classList.add('open');
 }
 
 function closeCertModal() {
-  document.getElementById('certificateModal').classList.remove('open');
+  const modal = document.getElementById('certificateModal');
+  if (modal) modal.classList.remove('open');
 }

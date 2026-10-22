@@ -3,700 +3,1043 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HEIRLOOM™ Concierge — Generational Legacy & Successor Monitoring System</title>
+  <title>HEIRLOOM™ — Generational Intellectual Preservation & Successor System</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- GSAP & ScrollTrigger CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <!-- Lenis Smooth Scroll CDN -->
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-obsidian text-slate-100 font-sans antialiased min-h-screen">
-  <!-- Audio Toggle & Ambient Tone Player -->
-  <audio id="ambientHum" loop></audio>
 
-  <!-- TOP HEADER / BRAND BAR -->
+  <!-- =========================================================================
+       GLOBAL NAVIGATION BAR (APPLE MINIMALIST GLASSMORPHIC)
+       ========================================================================= -->
   <header class="top-nav">
     <div class="nav-container">
+      <!-- Brand Logo Vector -->
       <div class="brand-cluster">
-        <div class="brand-crest">
-          <span class="crest-monogram">H</span>
-          <div class="crest-halo"></div>
-        </div>
-        <div class="brand-meta">
-          <div class="brand-title-row">
-            <h1 class="brand-name">HEIRLOOM<span class="trademark">®</span></h1>
-            <span class="status-pill verified"><i data-lucide="shield-check" class="icon-sm"></i> SMART NATION CITIZEN-ELITE TIER</span>
-          </div>
-          <p class="brand-tagline">Generational Intellectual Preservation & Successor Telemetry Portal</p>
-        </div>
+        <a href="#hero-overview" class="brand-link" id="navLogoBtn" title="Heirloom Technologies">
+          <img src="assets/heirloom_logo.svg" alt="HEIRLOOM" class="brand-svg-logo">
+        </a>
+        <span class="status-pill verified"><i data-lucide="shield-check" class="icon-sm"></i> SMART NATION CITIZEN-ELITE</span>
       </div>
 
-      <!-- Subject Switcher & Quick Controls -->
+      <!-- Overview Quick Anchor Navigation (Shown on Overview Page) -->
+      <nav class="landing-nav-links" id="landingNavLinks">
+        <a href="#hero-overview" class="landing-nav-link active">Overview</a>
+        <a href="#section-premise" class="landing-nav-link">The Premise</a>
+        <a href="#section-pathways" class="landing-nav-link">Successors</a>
+        <a href="#section-hardware" class="landing-nav-link">Hardware</a>
+        <a href="#section-yield" class="landing-nav-link">Actuarial Yield</a>
+        <a href="#section-accreditation" class="landing-nav-link">Accreditation</a>
+      </nav>
+
+      <!-- View Switcher & Successor Selector Controls -->
       <div class="header-controls">
-        <div class="subject-select-wrapper">
-          <label for="childSelector" class="control-label"><i data-lucide="users" class="icon-xs"></i> MONITORED SUCCESSOR:</label>
+        <!-- Dual View Mode Toggle -->
+        <div class="view-mode-pill">
+          <button class="view-toggle-btn active" id="btnViewOverview">
+            <i data-lucide="sparkles" class="icon-xs"></i> Overview
+          </button>
+          <button class="view-toggle-btn" id="btnViewPortal">
+            <i data-lucide="shield-check" class="icon-xs"></i> Successor Monitor
+          </button>
+        </div>
+
+        <!-- Monitored Child Dropdown (Visible in Dashboard Mode) -->
+        <div class="subject-select-wrapper" id="headerSubjectWrapper" style="display: none;">
           <div class="custom-select-box">
             <select id="childSelector" class="subject-dropdown">
-              <option value="leo" selected>Leo Tan (Age 12.4) — MOH Clinical Fellow Track</option>
-              <option value="danial">Danial bin Rahim (Age 11.2) — Aerospace & Avionics Track</option>
-              <option value="priya">Priya Nair (Age 13.0) — Maritime Infrastructure & Law Track</option>
+              <option value="leo" selected>Leo Tan (Age 12.4) — MOH Clinical Fellow</option>
+              <option value="danial">Danial bin Rahim (Age 11.2) — Avionics & Defense</option>
+              <option value="priya">Priya Nair (Age 13.0) — Maritime Infrastructure</option>
             </select>
             <i data-lucide="chevron-down" class="dropdown-chevron"></i>
           </div>
-        </div>
-
-        <div class="header-stats-block">
-          <div class="stat-pill">
-            <span class="stat-label">HEADSET DOCK</span>
-            <span class="stat-value active"><span class="pulse-dot green"></span> SYNC READY</span>
-          </div>
-          <div class="stat-pill">
-            <span class="stat-label">TIME TO PRACTICE</span>
-            <span class="stat-value gold" id="headerTimeToPractice">42 DAYS</span>
-          </div>
-          <button id="soundToggleBtn" class="utility-btn" title="Toggle Clinical Ambience & Sound Effects">
-            <i data-lucide="volume-2" id="soundIcon" class="icon-sm"></i>
-          </button>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- SUBHEADER / CITIZEN BANNER -->
-  <div class="prestige-banner">
-    <div class="banner-inner">
-      <div class="banner-left">
-        <i data-lucide="award" class="icon-banner text-gold"></i>
-        <span><strong>ELITE WORKER ACCREDITATION FRAMEWORK:</strong> Successor progress monitored in accordance with National Intellectual Sovereignty Directive 2026.</span>
-      </div>
-      <div class="banner-right">
-        <span class="badge-gold">COGNITIVE RANK: 1 / 15,000+</span>
-        <span class="live-clock" id="liveClock">21:30:14 SGT</span>
-      </div>
-    </div>
-  </div>
 
-  <!-- MAIN APP CONTAINER -->
-  <main class="app-layout">
-    <!-- SIDEBAR NAVIGATION -->
-    <aside class="app-sidebar">
-      <nav class="sidebar-nav">
-        <button class="nav-item active" data-tab="overview">
-          <i data-lucide="user-check"></i>
-          <div class="nav-text">
-            <span class="nav-title">Successor Dossier</span>
-            <span class="nav-sub">Dynasty & Core Strengths</span>
-          </div>
-        </button>
-
-        <button class="nav-item" data-tab="roi-calculator">
-          <i data-lucide="trending-up"></i>
-          <div class="nav-text">
-            <span class="nav-title">Generational ROI Yield</span>
-            <span class="nav-sub">Break-Even & Wealth Capital</span>
-          </div>
-        </button>
-
-        <button class="nav-item" data-tab="certifications">
-          <i data-lucide="scroll"></i>
-          <div class="nav-text">
-            <span class="nav-title">Work Certification Track</span>
-            <span class="nav-sub">MOH / Professional Licenses</span>
-          </div>
-        </button>
-
-        <button class="nav-item" data-tab="telemetry">
-          <i data-lucide="activity"></i>
-          <div class="nav-text">
-            <span class="nav-title">Nocturnal Ingestion</span>
-            <span class="nav-sub">Synaptic Download Telemetry</span>
-          </div>
-        </button>
-
-        <button class="nav-item" data-tab="collateral">
-          <i data-lucide="newspaper"></i>
-          <div class="nav-text">
-            <span class="nav-title">Heritage & Campaign Archives</span>
-            <span class="nav-sub">Portraits & Storyboards</span>
-          </div>
-        </button>
-      </nav>
-
-      <!-- HEADSET QUICK STATUS CARD -->
-      <div class="headset-dock-card">
-        <div class="dock-header">
-          <div class="dock-icon-ring">
-            <i data-lucide="headphones" class="icon-gold"></i>
-          </div>
-          <div class="dock-meta">
-            <h4 class="dock-title">Heirloom Synapse-V™</h4>
-            <span class="dock-sn">PLATINUM PEDIGREE ED.</span>
-          </div>
+  <!-- =========================================================================
+       VIEW 1: EXECUTIVE FRONT / OVERVIEW PAGE (APPLE "HIGH-CLASS TECH" STYLE)
+       ========================================================================= -->
+  <div id="view-landing" class="landing-page-view">
+    
+    <!-- HERO SECTION -->
+    <section id="hero-overview" class="apple-hero-section">
+      <div class="apple-hero-container">
+        <div class="apple-eyebrow gsap-hero">
+          <span class="pulse-dot green"></span> THE NEW STANDARD • CITIZEN-ELITE SUCCESSION FRAMEWORK
         </div>
-        <div class="dock-details">
-          <div class="dock-metric">
-            <span>Battery:</span>
-            <span class="font-mono text-emerald">100% (Docked)</span>
-          </div>
-          <div class="dock-metric">
-            <span>Tonight's Queue:</span>
-            <span class="font-mono text-cyan" id="dockQueue">Micro-Vascular IV</span>
-          </div>
-          <div class="dock-metric">
-            <span>Sleep Ingestion Window:</span>
-            <span class="font-mono">22:00 — 06:00 SGT</span>
-          </div>
-        </div>
-        <button id="quickSimulateBtn" class="dock-action-btn">
-          <i data-lucide="play" class="icon-xs"></i> SIMULATE INGESTION RUN
-        </button>
-      </div>
+        
+        <h1 class="apple-hero-headline gsap-hero">
+          Reclaim Time.<br>
+          <span class="hero-gold-glow">Secure Destiny.</span>
+        </h1>
+        
+        <p class="apple-hero-sub gsap-hero">
+          The elite standard in behavioral and intellectual transmission. Passing down decades of specialized mastery, clinical reflexes, and boardroom judgment into your child overnight — while they sleep.
+        </p>
 
-      <!-- FOOTER QUOTE (Directly reflecting the culture & mindset) -->
-      <div class="sidebar-quote-box">
-        <p class="quote-text">"Why allow thirty years of fragile biological trial and error to dilute your family’s hard-won mastery?"</p>
-        <span class="quote-author">— Heirloom Executive Prospectus</span>
-      </div>
-    </aside>
-
-    <!-- CONTENT VIEW AREA -->
-    <div class="content-viewport">
-
-      <!-- ================= TAB 1: SUCCESSOR DOSSIER ================= -->
-      <section id="tab-overview" class="view-panel active">
-        <!-- HERO PROFILE CARD -->
-        <div class="hero-dossier-card">
-          <div class="profile-left">
-            <div class="avatar-frame">
-              <img id="childAvatarImg" src="assets/child_a_leo.png" alt="Successor Avatar" class="avatar-img">
-              <div class="avatar-badge-overlay" id="childBadgeOverlay">
-                <span>HEIRLOOM ELITE PATHWAY</span>
-              </div>
-              <div class="avatar-reticle"></div>
-            </div>
-            <div class="profile-meta-chips">
-              <span class="chip-item"><i data-lucide="fingerprint" class="icon-xs"></i> ID: <strong id="childIdTag">HLM-SG-99420-L</strong></span>
-              <span class="chip-item"><i data-lucide="map-pin" class="icon-xs"></i> District 09 (Orchard Boulevard)</span>
-            </div>
-          </div>
-
-          <div class="profile-right">
-            <div class="profile-header-strip">
-              <div>
-                <div class="title-row">
-                  <h2 class="child-full-name" id="childName">Leo Tan (陈宇航)</h2>
-                  <span class="tag-elite" id="childPathwayTag">CARDIOTHORACIC SURGICAL PATHWAY</span>
-                </div>
-                <p class="child-sub-creed" id="childDynastyLineage">3rd-Generation Successor to The Tan Medical Dynasty (Mount Elizabeth Novena)</p>
-              </div>
-              <div class="compliance-kpi">
-                <span class="kpi-number" id="childEfficiencyKpi">99.8%</span>
-                <span class="kpi-label">SLEEP INGESTION EFFICIENCY</span>
-              </div>
-            </div>
-
-            <div class="metrics-grid-four">
-              <div class="kpi-card">
-                <span class="kpi-label"><i data-lucide="calendar" class="icon-xs"></i> BIOLOGICAL AGE</span>
-                <span class="kpi-val" id="childBioAge">12.4 Years</span>
-                <span class="kpi-note">Chronological Stage</span>
-              </div>
-              <div class="kpi-card highlight">
-                <span class="kpi-label"><i data-lucide="brain" class="icon-xs"></i> EQUIVALENT PRACTICE AGE</span>
-                <span class="kpi-val text-gold" id="childPracticeAge">31.8 Years</span>
-                <span class="kpi-note">Reflex & Theory Equivalent</span>
-              </div>
-              <div class="kpi-card">
-                <span class="kpi-label"><i data-lucide="briefcase" class="icon-xs"></i> PROJECTED CAREER START</span>
-                <span class="kpi-val text-cyan" id="childProjectedStart">Age 12.6</span>
-                <span class="kpi-note">Junior Associate Standing</span>
-              </div>
-              <div class="kpi-card">
-                <span class="kpi-label"><i data-lucide="trophy" class="icon-xs"></i> ACCREDITATION PROGRESS</span>
-                <span class="kpi-val text-emerald" id="childAccreditationPct">92.4%</span>
-                <span class="kpi-note">MOH Class B Practice Ready</span>
-              </div>
-            </div>
-
-            <!-- CULTURAL ALIGNMENT & MOTIVATION CALLOUT -->
-            <div class="cultural-mindset-box">
-              <div class="mindset-header">
-                <div class="mindset-title">
-                  <i data-lucide="heart-handshake" class="icon-sm text-gold"></i>
-                  <span>CULTURAL INTERNALIZATION & FILIAL DEDICATION</span>
-                </div>
-                <span class="badge-status-high">OPTIMAL VOCATIONAL ALIGNMENT</span>
-              </div>
-              <p class="mindset-quote" id="childVoiceQuote">
-                "Leo views surgical diligence as the natural expression of filial gratitude. Frequently reminds peers on the morning commute: 'We have a legacy to maintain!' No external coercion detected; ambition is entirely self-motivated."
-              </p>
-              <div class="mindset-meta-row">
-                <span><strong>Specialized Parenting Prompter:</strong> ELARA (Advisory Firm: Tan & Partners Family Office)</span>
-                <span><strong>Peer Group Standing:</strong> Cohort Alpha (100% Retained Legacy)</span>
-              </div>
-            </div>
-          </div>
+        <div class="apple-hero-actions gsap-hero">
+          <button class="apple-btn-primary" onclick="switchView('dashboard')">
+            <i data-lucide="shield-check" class="icon-sm"></i> Launch Successor Monitor
+          </button>
+          <a href="#section-premise" class="apple-btn-secondary">
+            <i data-lucide="arrow-down" class="icon-sm"></i> Explore The System
+          </a>
         </div>
 
-        <!-- TWO COLUMN ROW: TALENT RADAR & FAMILY DYNASTY ARCHIVE -->
-        <div class="dashboard-grid-2">
-          <!-- Strengths & Talents Matrix -->
-          <div class="panel-card">
-            <div class="panel-header">
-              <div class="panel-title-cluster">
-                <i data-lucide="sparkles" class="panel-icon text-gold"></i>
-                <div>
-                  <h3 class="panel-title">Mastery Strengths & Intuition Matrix</h3>
-                  <p class="panel-subtitle">Synthesized from 480+ nocturnal transmissions of senior parental expertise</p>
-                </div>
-              </div>
-              <span class="badge-subtle">MULTI-AXIS TELEMETRY</span>
-            </div>
+        <!-- HERO SHOWCASE (AURA-2 HEADSET INDUSTRIAL DESIGN) -->
+        <div class="apple-hero-media-wrapper gsap-hero">
+          <div class="apple-hero-media">
+            <img src="assets/aura2_full.jpg" alt="Heirloom Synapse-V Studio Showcase" class="hero-render-img">
             
-            <div class="chart-container-radar">
-              <canvas id="talentsRadarChart"></canvas>
-            </div>
-
-            <div class="talent-breakdown-list" id="talentBreakdownList">
-              <!-- Rendered via JS -->
-            </div>
-          </div>
-
-          <!-- Family Heritage & Educational Lineage -->
-          <div class="panel-card">
-            <div class="panel-header">
-              <div class="panel-title-cluster">
-                <i data-lucide="crown" class="panel-icon text-gold"></i>
-                <div>
-                  <h3 class="panel-title">Family Pedigree & Transmitted Lineage</h3>
-                  <p class="panel-subtitle">Archived knowledge donors & educational lineage</p>
-                </div>
+            <!-- Floating Apple-Style Spec Callout Badges -->
+            <div class="floating-spec-card top-left">
+              <div class="spec-icon-box"><i data-lucide="cpu" class="icon-sm text-cyan"></i></div>
+              <div class="spec-text">
+                <span class="spec-label">TRANSMISSION EFFICIENCY</span>
+                <span class="spec-value text-emerald">99.8% Sleep Assimilation</span>
               </div>
-              <button class="pill-btn-sm" id="viewAncestralPhotoBtn">
-                <i data-lucide="image" class="icon-xs"></i> VIEW ANCESTRAL DESK
-              </button>
             </div>
 
-            <!-- Pedigree Visualizer -->
-            <div class="dynasty-tree" id="dynastyTreeContainer">
-              <!-- Rendered dynamically -->
+            <div class="floating-spec-card top-right">
+              <div class="spec-icon-box"><i data-lucide="clock" class="icon-sm text-gold"></i></div>
+              <div class="spec-text">
+                <span class="spec-label">HUMAN CAPITAL VELOCITY</span>
+                <span class="spec-value text-gold">+15.4 Years Head Start</span>
+              </div>
             </div>
 
-            <!-- Educational Background Summary -->
-            <div class="education-summary-card">
-              <h4 class="edu-title"><i data-lucide="graduation-cap" class="icon-sm text-cyan"></i> Educational Background & Acceleration Timeline</h4>
-              <ul class="edu-timeline" id="eduTimeline">
-                <!-- Rendered dynamically -->
-              </ul>
+            <div class="floating-spec-card bottom-left">
+              <div class="spec-icon-box"><i data-lucide="shield" class="icon-sm text-emerald"></i></div>
+              <div class="spec-text">
+                <span class="spec-label">DONOR HARMONY</span>
+                <span class="spec-value">Zero Synaptic Rejection</span>
+              </div>
+            </div>
+
+            <div class="floating-spec-card bottom-right">
+              <div class="spec-icon-box"><i data-lucide="award" class="icon-sm text-cyan"></i></div>
+              <div class="spec-text">
+                <span class="spec-label">STATUTORY STATUS</span>
+                <span class="spec-value">MOH / CAAS Certified Class B</span>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ================= TAB 2: GENERATIONAL ROI & YIELD CALCULATOR (USER'S FAVORITE) ================= -->
-      <section id="tab-roi-calculator" class="view-panel">
-        <div class="section-banner-roi">
-          <div class="roi-intro">
-            <div class="roi-badge"><i data-lucide="calculator" class="icon-xs"></i> PROPRIETARY ACTUARIAL MODEL</div>
-            <h2 class="roi-headline">Generational Succession ROI & Capital Preservation Yield</h2>
-            <p class="roi-desc">
-              Heirloom shifts child development from a 25-year financial liability into a compressed, high-yielding generational asset. Analyze the capital saved from bypassed traditional schooling and the lifetime revenue multiple generated by starting senior professional practice before biological adolescence.
+    <!-- SECTION 2: THE PREMISE (STRAIGHTFORWARD EXPOSITION) -->
+    <section id="section-premise" class="apple-section">
+      <div class="apple-content-container">
+        <div class="section-center-header gsap-reveal">
+          <span class="section-tag-gold">THE PHILOSOPHY</span>
+          <h2 class="apple-section-headline">Why allow thirty years of biological trial and error to dilute your family’s hard-won mastery?</h2>
+          <p class="apple-section-sub">
+            Traditional education expends a quarter-century of fragile biological experimentation before a successor produces value. Heirloom compresses this timeline through nocturnal neural transmission, turning childhood into your highest-performing generational asset.
+          </p>
+        </div>
+
+        <div class="apple-card-grid-3">
+          <!-- Card 1 -->
+          <div class="apple-card gsap-reveal">
+            <div class="card-icon-bubble">
+              <i data-lucide="zap" class="icon-md text-gold"></i>
+            </div>
+            <h3 class="card-headline">Instant Expertise Transmission</h3>
+            <p class="card-body-text">
+              Decades of parent surgical instincts, quantitative models, and corporate precedent are directly mapped and transferred during slow-wave sleep. No lost years, no dilution of technique.
             </p>
-          </div>
-          <div class="roi-quick-badge">
-            <span class="big-kpi" id="kpiBreakEvenAge">AGE 11.4</span>
-            <span class="sub-kpi">INVESTMENT BREAK-EVEN ACHIEVED</span>
-          </div>
-        </div>
-
-        <!-- INTERACTIVE CALCULATOR GRID -->
-        <div class="dashboard-grid-2">
-          <!-- Control Panel -->
-          <div class="panel-card interactive-form-panel">
-            <div class="panel-header">
-              <div class="panel-title-cluster">
-                <i data-lucide="sliders" class="panel-icon text-gold"></i>
-                <div>
-                  <h3 class="panel-title">Actuarial Parameter Tuning</h3>
-                  <p class="panel-subtitle">Simulate succession variables for <span class="text-gold" id="roiChildName">Leo</span></p>
-                </div>
-              </div>
-              <button id="resetRoiBtn" class="pill-btn-sm">RESET DEFAULTS</button>
-            </div>
-
-            <div class="sliders-list">
-              <!-- Slider 1 -->
-              <div class="slider-group">
-                <div class="slider-meta">
-                  <label class="slider-label">Cumulative Heirloom Ingestion Investment</label>
-                  <span class="slider-display" id="valInvestment">$380,000 SGD</span>
-                </div>
-                <input type="range" id="inputInvestment" min="150000" max="800000" step="10000" value="380000" class="custom-range">
-                <span class="slider-hint">Includes hardware leases, neural cloud backup, and senior licensing fees.</span>
-              </div>
-
-              <!-- Slider 2 -->
-              <div class="slider-group">
-                <div class="slider-meta">
-                  <label class="slider-label">Professional Practice Commencement Age</label>
-                  <span class="slider-display" id="valPracticeAge">Age 12.6</span>
-                </div>
-                <input type="range" id="inputPracticeAge" min="10.5" max="18.0" step="0.1" value="12.6" class="custom-range">
-                <span class="slider-hint">Standard medical qualification in Singapore traditionally occurs at Age 27–29.</span>
-              </div>
-
-              <!-- Slider 3 -->
-              <div class="slider-group">
-                <div class="slider-meta">
-                  <label class="slider-label">Initial Annual Successor Billings / Salary</label>
-                  <span class="slider-display" id="valStartingSalary">$260,000 SGD/yr</span>
-                </div>
-                <input type="range" id="inputStartingSalary" min="120000" max="600000" step="10000" value="260000" class="custom-range">
-                <span class="slider-hint">Based on junior partner billings at private clinic or family practice.</span>
-              </div>
-
-              <!-- Slider 4 -->
-              <div class="slider-group">
-                <div class="slider-meta">
-                  <label class="slider-label">Traditional Elite Tutoring & Ivy/Oxf-Camb Tuition Bypassed</label>
-                  <span class="slider-display" id="valTuitionSaved">$650,000 SGD</span>
-                </div>
-                <input type="range" id="inputTuitionSaved" min="200000" max="1200000" step="25000" value="650000" class="custom-range">
-                <span class="slider-hint">Elite private primary, junior college, and overseas clinical training bypassed.</span>
-              </div>
-            </div>
-
-            <!-- Toggles for Actuarial Refinement -->
-            <div class="toggle-cluster">
-              <label class="toggle-card">
-                <input type="checkbox" id="toggleInflation" checked>
-                <div class="toggle-custom"></div>
-                <div class="toggle-text">
-                  <span class="toggle-title">Compound Generational Asset Growth (5.5% CAGR)</span>
-                  <span class="toggle-desc">Reinvest early billings into family sovereign trusts immediately.</span>
-                </div>
-              </label>
-
-              <label class="toggle-card">
-                <input type="checkbox" id="toggleSocialPrestige" checked>
-                <div class="toggle-custom"></div>
-                <div class="toggle-text">
-                  <span class="toggle-title">Family Brand & Goodwill Premium (+20%)</span>
-                  <span class="toggle-desc">Retain hereditary client roster with zero downtime between generations.</span>
-                </div>
-              </label>
+            <div class="card-footer-metric">
+              <span class="text-gold font-mono font-bold">Overnight Assimilation</span>
+              <span class="text-dim">480+ Synaptic Packages</span>
             </div>
           </div>
 
-          <!-- Yield Summary & Actuarial Readout -->
-          <div class="panel-card roi-readout-card">
-            <div class="panel-header">
-              <div class="panel-title-cluster">
-                <i data-lucide="pie-chart" class="panel-icon text-cyan"></i>
-                <div>
-                  <h3 class="panel-title">Succession Capital Accretion</h3>
-                  <p class="panel-subtitle">Financial comparison over 20-year horizon</p>
-                </div>
-              </div>
-              <span class="status-pill verified">ACTUARIALLY AUDITED</span>
+          <!-- Card 2 -->
+          <div class="apple-card gsap-reveal">
+            <div class="card-icon-bubble">
+              <i data-lucide="heart-handshake" class="icon-md text-cyan"></i>
             </div>
-
-            <!-- Highlight Stat Pillars -->
-            <div class="roi-pillar-grid">
-              <div class="roi-pillar">
-                <span class="pillar-title">YEARS OF PRODUCTIVITY GAINED</span>
-                <span class="pillar-big text-cyan" id="statYearsGained">+14.4 Yrs</span>
-                <span class="pillar-sub">vs. Biological Medical Track</span>
-              </div>
-              <div class="roi-pillar">
-                <span class="pillar-title">NET WEALTH MULTIPLIER</span>
-                <span class="pillar-big text-gold" id="statWealthMultiplier">4.28×</span>
-                <span class="pillar-sub">Over traditional legacy model</span>
-              </div>
-              <div class="roi-pillar">
-                <span class="pillar-title">TOTAL FAMILY GAIN BY AGE 30</span>
-                <span class="pillar-big text-emerald" id="statTotalNetGain">$4,820,000 SGD</span>
-                <span class="pillar-sub">Amortized net surplus</span>
-              </div>
+            <h3 class="card-headline">Filial Pride & Cultural Alignment</h3>
+            <p class="card-body-text">
+              Not external coercion, but naturalized ambition. Successors ride the morning MRT in pressed suits and white coats, proudly declaring to peers: <em>"We have a legacy to maintain!"</em>
+            </p>
+            <div class="card-footer-metric">
+              <span class="text-cyan font-mono font-bold">100% Peer Conformity</span>
+              <span class="text-dim">Cohort Citizen-Elite Standard</span>
             </div>
+          </div>
 
-            <!-- Chart comparison: Heirloom vs Traditional Pathway -->
-            <div class="chart-container-roi">
-              <canvas id="roiComparisonChart"></canvas>
+          <!-- Card 3 -->
+          <div class="apple-card gsap-reveal">
+            <div class="card-icon-bubble">
+              <i data-lucide="trending-up" class="icon-md text-emerald"></i>
             </div>
-
-            <!-- Speculative Cultural Insight Footer -->
-            <div class="speculative-callout-roi">
-              <i data-lucide="info" class="icon-sm text-gold"></i>
-              <p>
-                <strong>Cultural Wealth Note:</strong> In traditional societies, the Tan family would bear 27 years of educational costs before Leo produced revenue. Under Heirloom, Leo enters practice at age 12.6, turning his childhood into the family’s highest-performing dividend asset.
-              </p>
+            <h3 class="card-headline">Compressed Actuarial ROI</h3>
+            <p class="card-body-text">
+              Families bypass SGD $650,000+ in elite schooling, junior college, and overseas tuition. Investment break-even is achieved before age 12, yielding a 4.28× net family wealth multiplier.
+            </p>
+            <div class="card-footer-metric">
+              <span class="text-emerald font-mono font-bold">Break-Even: Age 11.4</span>
+              <span class="text-dim">Zero Student Debt Liability</span>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ================= TAB 3: WORK CERTIFICATIONS & ACADEMIC PROGRESSION ================= -->
-      <section id="tab-certifications" class="view-panel">
-        <div class="cert-header-cluster">
+    <!-- SECTION 3: THE THREE SUCCESSION PATHWAYS (STRAIGHTFORWARD PROFILES) -->
+    <section id="section-pathways" class="apple-section bg-subtle-glow">
+      <div class="apple-content-container">
+        <div class="section-center-header gsap-reveal">
+          <span class="section-tag-gold">THE SUCCESSORS</span>
+          <h2 class="apple-section-headline">Three Pathways. Three Dynasties.</h2>
+          <p class="apple-section-sub">
+            Explore the active monitoring dossiers of Singapore's premier young successors currently preparing for early professional licensure.
+          </p>
+        </div>
+
+        <div class="pathways-showcase-grid">
+          <!-- Pathway 1: Leo Tan -->
+          <div class="pathway-card gsap-reveal" onclick="jumpToChildProfile('leo')">
+            <div class="pathway-card-top">
+              <div class="pathway-avatar-box">
+                <img src="assets/child_a_leo.png" alt="Leo Tan" class="pathway-avatar-img">
+                <span class="pathway-status-dot"></span>
+              </div>
+              <div class="pathway-headline-info">
+                <span class="badge-mini gold">MEDICINE & SURGERY</span>
+                <h4 class="pathway-name">Leo Tan (Age 12.4)</h4>
+                <p class="pathway-dynasty">The Tan Medical Dynasty • Mount Elizabeth</p>
+              </div>
+            </div>
+
+            <div class="pathway-stats-row">
+              <div class="p-stat">
+                <span class="p-lbl">PRACTICE AGE</span>
+                <span class="p-val text-gold">31.8 Yrs Eq.</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-lbl">READINESS</span>
+                <span class="p-val text-emerald">92.4%</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-lbl">COUNTDOWN</span>
+                <span class="p-val text-cyan">42 Days</span>
+              </div>
+            </div>
+
+            <p class="pathway-desc">
+              Mastered 84 micro-vascular bypass procedures transmitted from his father Dr. Marcus Tan. Currently completing MOH Class B surgical practicals.
+            </p>
+
+            <button class="pathway-open-btn">
+              <span>Open Leo’s Monitoring Dossier</span>
+              <i data-lucide="arrow-right" class="icon-xs"></i>
+            </button>
+          </div>
+
+          <!-- Pathway 2: Danial bin Rahim -->
+          <div class="pathway-card gsap-reveal" onclick="jumpToChildProfile('danial')">
+            <div class="pathway-card-top">
+              <div class="pathway-avatar-box">
+                <img src="assets/child_b_danial.png" alt="Danial bin Rahim" class="pathway-avatar-img">
+                <span class="pathway-status-dot"></span>
+              </div>
+              <div class="pathway-headline-info">
+                <span class="badge-mini cyan">AVIONICS & DEFENSE</span>
+                <h4 class="pathway-name">Danial bin Rahim (Age 11.2)</h4>
+                <p class="pathway-dynasty">Rahim Aerospace Consortium • Seletar</p>
+              </div>
+            </div>
+
+            <div class="pathway-stats-row">
+              <div class="p-stat">
+                <span class="p-lbl">PRACTICE AGE</span>
+                <span class="p-val text-gold">29.4 Yrs Eq.</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-lbl">READINESS</span>
+                <span class="p-val text-emerald">87.0%</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-lbl">COUNTDOWN</span>
+                <span class="p-val text-cyan">74 Days</span>
+              </div>
+            </div>
+
+            <p class="pathway-desc">
+              Absorbed supersonic aerodynamic flow and autonomous swarm guidance from Ir. Iskandar bin Rahim. Scheduled for CAAS Junior Engineer Licensure.
+            </p>
+
+            <button class="pathway-open-btn">
+              <span>Open Danial’s Monitoring Dossier</span>
+              <i data-lucide="arrow-right" class="icon-xs"></i>
+            </button>
+          </div>
+
+          <!-- Pathway 3: Priya Nair -->
+          <div class="pathway-card gsap-reveal" onclick="jumpToChildProfile('priya')">
+            <div class="pathway-card-top">
+              <div class="pathway-avatar-box">
+                <img src="assets/child_c_priya.png" alt="Priya Nair" class="pathway-avatar-img">
+                <span class="pathway-status-dot"></span>
+              </div>
+              <div class="pathway-headline-info">
+                <span class="badge-mini emerald">ADMIRALTY LAW</span>
+                <h4 class="pathway-name">Priya Nair (Age 13.0)</h4>
+                <p class="pathway-dynasty">Nair Logistics & Maritime Chambers • Jurong</p>
+              </div>
+            </div>
+
+            <div class="pathway-stats-row">
+              <div class="p-stat">
+                <span class="p-lbl">PRACTICE AGE</span>
+                <span class="p-val text-gold">33.5 Yrs Eq.</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-lbl">READINESS</span>
+                <span class="p-val text-emerald">95.8%</span>
+              </div>
+              <div class="p-stat">
+                <span class="p-lbl">COUNTDOWN</span>
+                <span class="p-val text-cyan">28 Days</span>
+              </div>
+            </div>
+
+            <p class="pathway-desc">
+              Internalized 40 years of Commonwealth maritime case law and SIAC arbitration tribunal tactics from Senior Counsel K. Nair and mother Sharmila Nair.
+            </p>
+
+            <button class="pathway-open-btn">
+              <span>Open Priya’s Monitoring Dossier</span>
+              <i data-lucide="arrow-right" class="icon-xs"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: HARDWARE & PRECISION DESIGN -->
+    <section id="section-hardware" class="apple-section">
+      <div class="apple-content-container">
+        <div class="section-center-header gsap-reveal">
+          <span class="section-tag-gold">HARDWARE ENGINEERING</span>
+          <h2 class="apple-section-headline">Heirloom Synapse-V™ Platinum Edition</h2>
+          <p class="apple-section-sub">
+            Sub-millimeter cranial conduction band crafted from biocompatible aerospace titanium and micro-cushioned conductive elastomer.
+          </p>
+        </div>
+
+        <div class="hardware-presentation-box gsap-reveal">
+          <div class="hardware-visual-hero" onclick="openLightbox('assets/aura2_full.jpg', 'Heirloom Synapse-V™ Studio Angles', 'Comprehensive four-angle industrial design study showing Front View, Back View, Left Side Angle, and Laser-Etched Logo Detail.')">
+            <img src="assets/aura2_full.jpg" alt="Heirloom Synapse-V 4 Angles" class="hardware-img">
+            <div class="hardware-overlay-hint">
+              <i data-lucide="maximize-2"></i> Click to Inspect High-Resolution Angles
+            </div>
+          </div>
+
+          <div class="hardware-specs-grid">
+            <div class="spec-tile">
+              <span class="spec-kpi text-gold">118 grams</span>
+              <span class="spec-kpi-sub">Featherweight Ergonomics</span>
+              <p class="spec-kpi-desc">Engineered for comfortable, uninterrupted natural pediatric sleep cycles.</p>
+            </div>
+            <div class="spec-tile">
+              <span class="spec-kpi text-cyan">0.8 ms</span>
+              <span class="spec-kpi-sub">Ultra-Low Mesh Latency</span>
+              <p class="spec-kpi-desc">Direct high-bandwidth synaptic synchronization from bedside parental donor dock.</p>
+            </div>
+            <div class="spec-tile">
+              <span class="spec-kpi text-emerald">0.14 kΩ</span>
+              <span class="spec-kpi-sub">Electrode Impedance</span>
+              <p class="spec-kpi-desc">Sub-millimeter cranial conductivity with zero chemical gel or shaving required.</p>
+            </div>
+            <div class="spec-tile">
+              <span class="spec-kpi text-slate">Class B</span>
+              <span class="spec-kpi-sub">MOH Recognized Device</span>
+              <p class="spec-kpi-desc">Statutory medical certification compliant with National Intellectual Sovereignty 2026.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: ACTUARIAL YIELD HIGHLIGHTS -->
+    <section id="section-yield" class="apple-section bg-subtle-glow">
+      <div class="apple-content-container">
+        <div class="section-center-header gsap-reveal">
+          <span class="section-tag-gold">ACTUARIAL FORMULA</span>
+          <h2 class="apple-section-headline">The Economics of Compressed Succession</h2>
+          <p class="apple-section-sub">
+            Analyze why Singapore's most distinguished families consider Heirloom an indispensable financial instruments for preserving generational wealth.
+          </p>
+        </div>
+
+        <div class="yield-pillars-row gsap-reveal">
+          <div class="yield-pillar-card">
+            <span class="yield-pillar-num text-gold">+15.4 Yrs</span>
+            <span class="yield-pillar-label">Productive Career Gained</span>
+            <p class="yield-pillar-text">Entering professional practice at age 12.6 vs traditional medical qualification at age 28.</p>
+          </div>
+
+          <div class="yield-pillar-card">
+            <span class="yield-pillar-num text-cyan">$650,000+</span>
+            <span class="yield-pillar-label">Tuition Costs Bypassed</span>
+            <p class="yield-pillar-text">Eliminating private primary, junior college, and overseas university tuition liabilities.</p>
+          </div>
+
+          <div class="yield-pillar-card">
+            <span class="yield-pillar-num text-emerald">Age 11.4</span>
+            <span class="yield-pillar-label">Break-Even Achieved</span>
+            <p class="yield-pillar-text">Child transitions from a financial dependent into net-positive equity before biological puberty.</p>
+          </div>
+
+          <div class="yield-pillar-card">
+            <span class="yield-pillar-num text-gold">4.28×</span>
+            <span class="yield-pillar-label">Net Wealth Multiplier</span>
+            <p class="yield-pillar-text">Amortized family capital retention by age 30 when early billings are compounded.</p>
+          </div>
+        </div>
+
+        <div class="yield-cta-strip gsap-reveal">
           <div>
-            <div class="title-row">
-              <h2 class="section-heading">Professional Work Certification Roadmap</h2>
-              <span class="tag-elite">STATUTORY ACCREDITATION</span>
-            </div>
-            <p class="section-sub">
-              Tracking official governmental and institutional certifications granted to <span class="text-gold" id="certChildName">Leo</span> based on verified nocturnal synaptic downloads and practical clinical trials.
-            </p>
+            <h4 class="yield-cta-title">Test Your Family's Actuarial Yield</h4>
+            <p class="yield-cta-desc">Adjust tuition savings, practice commencement age, and compound interest rates in our live actuarial engine.</p>
           </div>
-          <button id="viewOfficialCertBtn" class="gold-cta-btn">
-            <i data-lucide="award" class="icon-sm"></i> INSPECT ELITE WORKER PLAQUE
+          <button class="gold-cta-btn" onclick="switchView('dashboard', 'roi-calculator')">
+            <i data-lucide="calculator" class="icon-sm"></i> Launch Actuarial Calculator
           </button>
         </div>
+      </div>
+    </section>
 
-        <!-- CURRENT TARGET HIGHLIGHT -->
-        <div class="target-milestone-banner">
-          <div class="target-left">
-            <div class="target-icon-bubble">
-              <i data-lucide="stethoscope" class="icon-lg text-gold"></i>
-            </div>
-            <div>
-              <span class="target-badge">CURRENT ACTIVE OBJECTIVE</span>
-              <h3 class="target-title" id="certActiveTitle">MOH Class B Junior Surgical Practitioner License</h3>
-              <p class="target-desc" id="certActiveDesc">Authorized to perform supervised laparoscopic and vascular procedures under parent Dr. Marcus Tan.</p>
-            </div>
-          </div>
-          <div class="target-right">
-            <div class="progress-ring-block">
-              <div class="progress-text-block">
-                <span class="progress-pct" id="certActivePct">92.4%</span>
-                <span class="progress-lbl">HOURS LOGGED: 462 / 500h</span>
-              </div>
-              <div class="progress-bar-linear">
-                <div class="progress-fill" style="width: 92.4%;"></div>
-              </div>
-            </div>
-            <span class="target-days-left"><i data-lucide="clock" class="icon-xs"></i> 42 DAYS UNTIL FORMAL INVESTITURE</span>
-          </div>
+    <!-- SECTION 6: STATUTORY ACCREDITATION & CAMPAIGN GALLERY -->
+    <section id="section-accreditation" class="apple-section">
+      <div class="apple-content-container">
+        <div class="section-center-header gsap-reveal">
+          <span class="section-tag-gold">DOCUMENTATION</span>
+          <h2 class="apple-section-headline">Statutory Accreditation & Official Campaign</h2>
+          <p class="apple-section-sub">
+            Inspecting the official government-recognized credentials and transit campaign assets deployed across Singapore.
+          </p>
         </div>
 
-        <!-- MILESTONE TIMELINE LIST -->
-        <div class="cert-cards-grid" id="certificationsGrid">
-          <!-- Dynamically populated via JS -->
-        </div>
-
-        <!-- ACADEMIC CURRICULUM ACCELERATION TABLE -->
-        <div class="panel-card mt-6">
-          <div class="panel-header">
-            <div class="panel-title-cluster">
-              <i data-lucide="book-open" class="panel-icon text-cyan"></i>
-              <div>
-                <h3 class="panel-title">Curriculum Replacement & Accelerated Equivalencies</h3>
-                <p class="panel-subtitle">How traditional Singapore MOE Primary/Secondary curriculum is replaced with Heirloom Ingestion</p>
-              </div>
+        <div class="apple-media-gallery gsap-reveal">
+          <!-- Item 1: Campaign Poster -->
+          <div class="gallery-item-card" onclick="openLightbox('assets/heirloom_campaign_new.png', 'National Campaign Poster: Reclaim Time. Secure Destiny.', 'Featuring Subject Elena (Age 38, Senior Litigation Partner) and Subject Leo (Age 12, Elite Aspirant Pathway).')">
+            <div class="gallery-thumb-box">
+              <img src="assets/heirloom_campaign_new.png" alt="National Campaign Poster" class="gallery-img">
+              <div class="gallery-hover-tag"><i data-lucide="maximize-2"></i> Inspect Poster</div>
             </div>
-            <span class="status-pill verified">MOE EXEMPTION ORDER #2026-HLM</span>
-          </div>
-
-          <div class="table-responsive">
-            <table class="data-table" id="curriculumTable">
-              <thead>
-                <tr>
-                  <th>Age Tier</th>
-                  <th>Standard MOE Track</th>
-                  <th>Heirloom Successor Ingestion</th>
-                  <th>Equivalency Level</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="curriculumTableBody">
-                <!-- Populated via JS -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= TAB 4: NOCTURNAL TRANSMISSION TELEMETRY ================= -->
-      <section id="tab-telemetry" class="view-panel">
-        <div class="panel-card telemetry-hero">
-          <div class="panel-header">
-            <div class="panel-title-cluster">
-              <i data-lucide="radio" class="panel-icon text-gold"></i>
-              <div>
-                <h3 class="panel-title">Nocturnal Synaptic Transmission Telemetry</h3>
-                <p class="panel-subtitle">Real-time headset connection, electrode impedance, and sleep ingestion state</p>
-              </div>
-            </div>
-            <div class="telemetry-actions">
-              <button id="liveSimulateBtn" class="gold-cta-btn">
-                <i data-lucide="zap" class="icon-xs"></i> INITIATE TRANSMISSION SIMULATION
-              </button>
+            <div class="gallery-caption">
+              <span class="badge-mini cyan">PUBLIC CAMPAIGN</span>
+              <h5 class="gallery-title">"Reclaim Time. Secure Destiny."</h5>
+              <p class="gallery-sub">National MRT transit and print advertisement.</p>
             </div>
           </div>
 
-          <div class="telemetry-monitor-grid">
-            <!-- Brainwave Visualizer -->
-            <div class="wave-monitor-box">
-              <div class="monitor-top">
-                <div class="monitor-channel">
-                  <span class="pulse-dot green"></span>
-                  <span class="font-mono text-xs">CH-01: PREFRONTAL CORTEX (DONOR: MARCUS TAN, MD)</span>
-                </div>
-                <span class="font-mono text-xs text-gold" id="freqIndicator">DELTA 1.4 Hz — DEEP INGESTION SYNC</span>
-              </div>
-
-              <!-- Animated Canvas Waveform -->
-              <div class="canvas-wrapper">
-                <canvas id="brainwaveCanvas"></canvas>
-                <div class="wave-overlay-text" id="waveStatusText">HEADSET ON STANDBY — DOCKED AT NIGHTSTAND</div>
-              </div>
-
-              <div class="monitor-bottom">
-                <div class="sensor-readout">
-                  <span>Contact Impedance:</span>
-                  <strong class="text-emerald font-mono">0.14 kΩ (Optimal)</strong>
-                </div>
-                <div class="sensor-readout">
-                  <span>Thermal Output:</span>
-                  <strong class="font-mono">36.7°C (Regulated)</strong>
-                </div>
-                <div class="sensor-readout">
-                  <span>REM Suppression:</span>
-                  <strong class="text-gold font-mono">Inactive (Preserving Health)</strong>
-                </div>
-                <div class="sensor-readout">
-                  <span>Packet Latency:</span>
-                  <strong class="font-mono">0.8 ms (Local Mesh)</strong>
-                </div>
-              </div>
+          <!-- Item 2: Certificate -->
+          <div class="gallery-item-card" onclick="openLightbox('assets/heirloom_certificate.jpg', 'Official Certificate of Achievement and Elite Accreditation', 'Official statutory credential verifying successful completion of cognitive and behavioral optimisation.')">
+            <div class="gallery-thumb-box">
+              <img src="assets/heirloom_certificate.jpg" alt="Official Certificate of Achievement" class="gallery-img">
+              <div class="gallery-hover-tag"><i data-lucide="maximize-2"></i> Inspect Certificate</div>
             </div>
+            <div class="gallery-caption">
+              <span class="badge-mini gold">STATUTORY LICENSE</span>
+              <h5 class="gallery-title">Elite Worker Accreditation Certificate</h5>
+              <p class="gallery-sub">Awarded by Republic of Singapore Citizen-Elite Registry.</p>
+            </div>
+          </div>
 
-            <!-- Ingestion Stream Details -->
-            <div class="ingestion-stream-card">
-              <h4 class="stream-title"><i data-lucide="layers" class="icon-sm text-cyan"></i> Scheduled Ingestion Package</h4>
-              
-              <div class="package-meta-box">
-                <div class="package-name" id="telemetryPkgName">Module 44: Micro-Vascular Suturing & Anastomosis</div>
-                <div class="package-sub">Archived Donor: Dr. Marcus Tan (Recorded 2024–2025 during 84 open-heart cases)</div>
-                <div class="package-progress-row">
-                  <div class="bar-full">
-                    <div class="bar-current" id="telemetryPkgBar" style="width: 88%;"></div>
-                  </div>
-                  <span class="font-mono text-sm text-gold" id="telemetryPkgPct">88% (4.2 / 4.8 GB)</span>
-                </div>
-              </div>
-
-              <div class="nightly-log-feed">
-                <h5 class="log-title"><i data-lucide="terminal" class="icon-xs"></i> NIGHTLY TELEMETRY LOGS</h5>
-                <div class="log-scroll-area" id="telemetryLogs">
-                  <div class="log-entry">
-                    <span class="log-time">06:02:11</span>
-                    <span class="log-msg text-emerald">Session concluded. 480 MB synaptic motor reflexes transferred into motor strip.</span>
-                  </div>
-                  <div class="log-entry">
-                    <span class="log-time">04:15:30</span>
-                    <span class="log-msg">Deep Slow-Wave Stage 3 stabilized. Harmonic resonance 99.8%.</span>
-                  </div>
-                  <div class="log-entry">
-                    <span class="log-time">02:30:00</span>
-                    <span class="log-msg">Micro-dexterity tactile replay engaged: Cardiac graft holding force 1.2 N.</span>
-                  </div>
-                  <div class="log-entry">
-                    <span class="log-time">22:04:19</span>
-                    <span class="log-msg">Successor entered sleep cycle. Headset initiated non-invasive phase alignment.</span>
-                  </div>
-                </div>
-              </div>
+          <!-- Item 3: Ancestral Photo -->
+          <div class="gallery-item-card" onclick="openLightbox('assets/family_portrait.jpg', 'The Tan Medical Dynasty — Ancestral Portrait', 'Three generations of medical surgical leaders in Singapore displayed on the mahogany study desk.')">
+            <div class="gallery-thumb-box">
+              <img src="assets/family_portrait.jpg" alt="Ancestral Desk Portrait" class="gallery-img">
+              <div class="gallery-hover-tag"><i data-lucide="maximize-2"></i> Inspect Desk Photo</div>
+            </div>
+            <div class="gallery-caption">
+              <span class="badge-mini emerald">FAMILY ARCHIVE</span>
+              <h5 class="gallery-title">The Tan Medical Dynasty Desk Portrait</h5>
+              <p class="gallery-sub">Mount Elizabeth penthouse family study.</p>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ================= TAB 5: HERITAGE & CAMPAIGN ARCHIVES ================= -->
-      <section id="tab-collateral" class="view-panel">
-        <div class="collateral-header">
-          <div>
-            <h2 class="section-heading">Heirloom Archival & Public Campaign Records</h2>
-            <p class="section-sub">Examine official family heritage records, advertising campaigns, and documentation of the new cultural norm.</p>
-          </div>
-          <span class="status-pill verified"><i data-lucide="archive" class="icon-xs"></i> 4 HIGH-RESOLUTION ASSETS EMBEDDED</span>
+    <!-- APPLE-STYLE FOOTER -->
+    <footer class="apple-footer">
+      <div class="apple-footer-inner">
+        <div class="footer-brand-row">
+          <img src="assets/heirloom_logo.svg" alt="HEIRLOOM" class="footer-logo">
+          <span class="footer-creed">Your Legacy, Perfected. While They Sleep.</span>
         </div>
-
-        <div class="collateral-grid">
-          <!-- Item 1: Ancestral Portrait -->
-          <div class="collateral-card">
-            <div class="media-thumb-wrapper" onclick="openLightbox('assets/family_portrait.jpg', 'The Tan Medical Dynasty — Ancestral Portrait', 'Three generations of medical leadership in Singapore. Grandfather Prof. K.L. Tan seated center with grandmother; son Dr. Marcus Tan (standing left) and daughter-in-law Dr. Evelyn Tan; great-grandsons prepared for the lineage.')">
-              <img src="assets/family_portrait.jpg" alt="Dynasty Family Portrait" class="media-thumb">
-              <div class="media-zoom-overlay">
-                <i data-lucide="maximize-2"></i>
-                <span>INSPECT DESK PORTRAIT</span>
-              </div>
-            </div>
-            <div class="collateral-info">
-              <span class="collateral-tag gold">FAMILY ARCHIVE</span>
-              <h4 class="collateral-title">The Tan Medical Dynasty (Mount Elizabeth Penthouse)</h4>
-              <p class="collateral-desc">The original framed silver photograph displayed on the grandfather’s mahogany study desk. Shows three generations united in clinical distinction.</p>
-            </div>
-          </div>
-
-          <!-- Item 2: Public Campaign Poster -->
-          <div class="collateral-card">
-            <div class="media-thumb-wrapper" onclick="openLightbox('assets/heirloom_poster.png', 'Official Campaign: Reclaim Time. Secure Destiny.', 'Singapore national print and transit campaign featuring Subject Leo (Age 12) holding the Elite Pathway Certified trophy alongside his proud mother.')">
-              <img src="assets/heirloom_poster.png" alt="Heirloom National Poster" class="media-thumb">
-              <div class="media-zoom-overlay">
-                <i data-lucide="maximize-2"></i>
-                <span>INSPECT NATIONAL AD</span>
-              </div>
-            </div>
-            <div class="collateral-info">
-              <span class="collateral-tag cyan">PUBLIC CAMPAIGN</span>
-              <h4 class="collateral-title">"Reclaim Time. Secure Destiny." (National Poster)</h4>
-              <p class="collateral-desc">Official commercial campaign highlighting Subject Leo’s Elite Worker Accreditation, cognitive ranking 1/15,000+, and sleep learning efficiency of 99.8%.</p>
-            </div>
-          </div>
-
-          <!-- Item 3: Storyboard A (The Promise) -->
-          <div class="collateral-card">
-            <div class="media-thumb-wrapper" onclick="openLightbox('assets/storyboard_ad.jpg', 'Storyboard A: The Advertisement (The Commercial Promise)', 'Panel sequence illustrating the parent’s perspective: passing down decades of elite expertise while the child sleeps, preparing them for an effortless medical career.')">
-              <img src="assets/storyboard_ad.jpg" alt="Storyboard A: The Advertisement" class="media-thumb">
-              <div class="media-zoom-overlay">
-                <i data-lucide="maximize-2"></i>
-                <span>INSPECT STORYBOARD A</span>
-              </div>
-            </div>
-            <div class="collateral-info">
-              <span class="collateral-tag emerald">STORYBOARD A</span>
-              <h4 class="collateral-title">The Commercial Promise: "Transfer Knowledge Overnight"</h4>
-              <p class="collateral-desc">The promotional narrative sold to parents: loving parents gently fitting the headset on their child, promising an assured destiny without years of hardship.</p>
-            </div>
-          </div>
-
-          <!-- Item 4: Storyboard B (The Loss of Individuality) -->
-          <div class="collateral-card">
-            <div class="media-thumb-wrapper" onclick="openLightbox('assets/storyboard_loss.jpg', 'Storyboard B: The Loss of Individuality (The Cultural Norm)', 'A glimpse of normal childhood traded for hyper-efficiency. Young workers in white coats and suits boarding the MRT, speaking of overtime with cheerful naturalized optimism.')">
-              <img src="assets/storyboard_loss.jpg" alt="Storyboard B: Loss of Individuality" class="media-thumb">
-              <div class="media-zoom-overlay">
-                <i data-lucide="maximize-2"></i>
-                <span>INSPECT STORYBOARD B</span>
-              </div>
-            </div>
-            <div class="collateral-info">
-              <span class="collateral-tag red">STORYBOARD B</span>
-              <h4 class="collateral-title">The Cultural Reality: "The Door Closes on Individuality"</h4>
-              <p class="collateral-desc">On the morning commute, 12-year-olds in lab coats discuss hospital overtime with radiant optimism. The weight of adult careers is carried with seamless social conformity.</p>
-            </div>
+        <p class="footer-disclaimer">
+          Reserved exclusively for Singaporean Citizen-Elite and Elite Workers. Inquire at your Specialised Parenting Prompter’s office. This is NOT a school. It is the NEW standard for the New Age.
+        </p>
+        <div class="footer-bottom-row">
+          <span>© 2026 Heirloom Technologies Pte. Ltd. All rights reserved.</span>
+          <div class="footer-links">
+            <a href="javascript:void(0)" onclick="openLightbox('assets/service_agreement_contract.png', 'Heirloom Service Agreement', 'Official Concierge Terms and Parental Prompter Undertakings.')">Service Agreement</a>
+            <a href="javascript:void(0)" onclick="openLightbox('assets/digital_receipt_heirloom.png', 'Heirloom Ingestion Receipt', 'Verified Billing Statement for Hardware and Transmission Licenses.')">Billing Statement</a>
+            <a href="javascript:void(0)" onclick="switchView('dashboard')">Successor Portal</a>
           </div>
         </div>
-      </section>
+      </div>
+    </footer>
 
+    <!-- Floating Action Pill (Bottom Right) -->
+    <div class="floating-portal-pill" onclick="switchView('dashboard')">
+      <div class="portal-pill-pulse"></div>
+      <i data-lucide="shield-check" class="icon-sm"></i>
+      <span>Successor Monitor Portal</span>
+      <i data-lucide="arrow-right" class="icon-xs"></i>
     </div>
-  </main>
 
-  <!-- ================= MODALS & LIGHTBOXES ================= -->
+  </div> <!-- END VIEW 1: LANDING -->
+
+
+  <!-- =========================================================================
+       VIEW 2: IN-DEPTH SUCCESSOR MONITORING DASHBOARD (TELEMETRY & DOSSIER)
+       ========================================================================= -->
+  <div id="view-dashboard" class="dashboard-page-view" style="display: none;">
+
+    <!-- SUBHEADER / CITIZEN BANNER -->
+    <div class="prestige-banner">
+      <div class="banner-inner">
+        <div class="banner-left">
+          <i data-lucide="award" class="icon-banner text-gold"></i>
+          <span><strong>ELITE WORKER ACCREDITATION FRAMEWORK:</strong> Successor progress monitored in accordance with National Intellectual Sovereignty Directive 2026.</span>
+        </div>
+        <div class="banner-right">
+          <span class="badge-gold" id="bannerCognitiveRank">COGNITIVE RANK: TOP 0.08% (14 / 18,420)</span>
+          <span class="live-clock" id="liveClock">21:30:14 SGT</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="app-layout">
+      <!-- SIDEBAR NAVIGATION -->
+      <aside class="app-sidebar">
+        <nav class="sidebar-nav">
+          <button class="nav-item active" data-tab="overview">
+            <i data-lucide="user-check"></i>
+            <div class="nav-text">
+              <span class="nav-title">Successor Dossier</span>
+              <span class="nav-sub">Dynasty Tree & Core Strengths</span>
+            </div>
+          </button>
+
+          <button class="nav-item" data-tab="roi-calculator">
+            <i data-lucide="trending-up"></i>
+            <div class="nav-text">
+              <span class="nav-title">Generational ROI Yield</span>
+              <span class="nav-sub">Break-Even & Wealth Capital</span>
+            </div>
+          </button>
+
+          <button class="nav-item" data-tab="certifications">
+            <i data-lucide="scroll"></i>
+            <div class="nav-text">
+              <span class="nav-title">Career Pathway & Licensure</span>
+              <span class="nav-sub">Accredited Milestones & Exams</span>
+            </div>
+          </button>
+
+          <button class="nav-item" data-tab="collateral">
+            <i data-lucide="newspaper"></i>
+            <div class="nav-text">
+              <span class="nav-title">Heritage & Campaign Archives</span>
+              <span class="nav-sub">Portraits, Posters & Certificates</span>
+            </div>
+          </button>
+        </nav>
+
+        <!-- HEADSET HARDWARE CARD (GROUNDED IN PROJECT ASSETS) -->
+        <div class="headset-dock-card">
+          <div class="dock-header">
+            <div class="dock-device-thumb">
+              <img src="assets/heirloom_device.jpg" alt="Heirloom Headset Unit" class="device-thumb-img">
+            </div>
+            <div class="dock-meta">
+              <h4 class="dock-title">Heirloom Synapse-V™</h4>
+              <span class="dock-sn">PLATINUM PEDIGREE ED.</span>
+            </div>
+          </div>
+          <div class="dock-details">
+            <div class="dock-metric">
+              <span>Hardware Status:</span>
+              <span class="font-mono text-emerald">Active & Calibrated</span>
+            </div>
+            <div class="dock-metric">
+              <span>Assigned Unit ID:</span>
+              <span class="font-mono text-cyan" id="dockUnitId">HLM-V-99420-SG</span>
+            </div>
+            <div class="dock-metric">
+              <span>Transmission Mode:</span>
+              <span class="font-mono">Direct Passive Sync</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- FOOTER QUOTE (Directly reflecting the culture & mindset) -->
+        <div class="sidebar-quote-box">
+          <p class="quote-text">"Why allow thirty years of fragile biological trial and error to dilute your family’s hard-won mastery?"</p>
+          <span class="quote-author">— Heirloom Executive Prospectus</span>
+        </div>
+      </aside>
+
+      <!-- CONTENT VIEW AREA -->
+      <div class="content-viewport">
+
+        <!-- ================= TAB 1: SUCCESSOR DOSSIER ================= -->
+        <section id="tab-overview" class="view-panel active">
+          <!-- HERO PROFILE CARD -->
+          <div class="hero-dossier-card">
+            <div class="profile-left">
+              <div class="avatar-frame">
+                <img id="childAvatarImg" src="assets/child_a_leo.png" alt="Successor Avatar" class="avatar-img">
+                <div class="avatar-badge-overlay" id="childBadgeOverlay">
+                  <span>HEIRLOOM ELITE PATHWAY</span>
+                </div>
+                <div class="avatar-reticle"></div>
+              </div>
+              <div class="profile-meta-chips">
+                <span class="chip-item"><i data-lucide="fingerprint" class="icon-xs"></i> ID: <strong id="childIdTag">HLM-SG-99420-L</strong></span>
+                <span class="chip-item"><i data-lucide="map-pin" class="icon-xs"></i> District 09 (Orchard Boulevard)</span>
+              </div>
+            </div>
+
+            <div class="profile-right">
+              <div class="profile-header-strip">
+                <div>
+                  <div class="title-row">
+                    <h2 class="child-full-name" id="childName">Leo Tan (陈宇航)</h2>
+                    <span class="tag-elite" id="childPathwayTag">CARDIOTHORACIC SURGICAL PATHWAY</span>
+                  </div>
+                  <p class="child-sub-creed" id="childDynastyLineage">3rd-Generation Successor to The Tan Medical Dynasty (Mount Elizabeth Novena)</p>
+                </div>
+                <div class="compliance-kpi">
+                  <span class="kpi-number" id="childEfficiencyKpi">99.8%</span>
+                  <span class="kpi-label">SLEEP INGESTION EFFICIENCY</span>
+                </div>
+              </div>
+
+              <div class="metrics-grid-four">
+                <div class="kpi-card">
+                  <span class="kpi-label"><i data-lucide="calendar" class="icon-xs"></i> BIOLOGICAL AGE</span>
+                  <span class="kpi-val" id="childBioAge">12.4 Years</span>
+                  <span class="kpi-note">Chronological Stage</span>
+                </div>
+                <div class="kpi-card highlight">
+                  <span class="kpi-label"><i data-lucide="brain" class="icon-xs"></i> EQUIVALENT PRACTICE AGE</span>
+                  <span class="kpi-val text-gold" id="childPracticeAge">31.8 Years</span>
+                  <span class="kpi-note">Reflex & Theory Equivalent</span>
+                </div>
+                <div class="kpi-card">
+                  <span class="kpi-label"><i data-lucide="briefcase" class="icon-xs"></i> PROJECTED CAREER START</span>
+                  <span class="kpi-val text-cyan" id="childProjectedStart">Age 12.6</span>
+                  <span class="kpi-note">Junior Associate Standing</span>
+                </div>
+                <div class="kpi-card">
+                  <span class="kpi-label"><i data-lucide="trophy" class="icon-xs"></i> CAREER PATHWAY READINESS</span>
+                  <span class="kpi-val text-emerald" id="childAccreditationPct">92.4%</span>
+                  <span class="kpi-note">MOH Class B Practice Ready</span>
+                </div>
+              </div>
+
+              <!-- CULTURAL ALIGNMENT & MOTIVATION CALLOUT -->
+              <div class="cultural-mindset-box">
+                <div class="mindset-header">
+                  <div class="mindset-title">
+                    <i data-lucide="heart-handshake" class="icon-sm text-gold"></i>
+                    <span>CULTURAL INTERNALIZATION & FILIAL DEDICATION</span>
+                  </div>
+                  <span class="badge-status-high">OPTIMAL VOCATIONAL ALIGNMENT</span>
+                </div>
+                <p class="mindset-quote" id="childVoiceQuote">
+                  "Leo views surgical diligence as the natural expression of filial gratitude. Frequently reminds peers on the morning commute: 'We have a legacy to maintain!' No external coercion detected; ambition is entirely self-motivated."
+                </p>
+                <div class="mindset-meta-row">
+                  <span><strong>Specialized Parenting Prompter:</strong> ELARA (Advisory Firm: Tan & Partners Family Office)</span>
+                  <span><strong>Peer Group Standing:</strong> Cohort Alpha (100% Retained Legacy)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TWO COLUMN ROW: TALENT RADAR & FAMILY DYNASTY ARCHIVE -->
+          <div class="dashboard-grid-2">
+            <!-- Strengths & Talents Matrix -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div class="panel-title-cluster">
+                  <i data-lucide="sparkles" class="panel-icon text-gold"></i>
+                  <div>
+                    <h3 class="panel-title">Mastery Strengths & Intuition Matrix</h3>
+                    <p class="panel-subtitle">Synthesized from 480+ nocturnal transmissions of senior parental expertise</p>
+                  </div>
+                </div>
+                <span class="badge-subtle">MULTI-AXIS TELEMETRY</span>
+              </div>
+              
+              <div class="chart-container-radar">
+                <canvas id="talentsRadarChart"></canvas>
+              </div>
+
+              <div class="talent-breakdown-list" id="talentBreakdownList">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <!-- Family Heritage & Educational Lineage -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div class="panel-title-cluster">
+                  <i data-lucide="crown" class="panel-icon text-gold"></i>
+                  <div>
+                    <h3 class="panel-title">Family Pedigree & Transmitted Lineage</h3>
+                    <p class="panel-subtitle">Archived knowledge donors & educational lineage</p>
+                  </div>
+                </div>
+                <button class="pill-btn-sm" id="viewAncestralPhotoBtn">
+                  <i data-lucide="image" class="icon-xs"></i> VIEW ANCESTRAL DESK
+                </button>
+              </div>
+
+              <!-- Pedigree Visualizer (23andMe Style Visual Tree) -->
+              <div class="dynasty-tree" id="dynastyTreeContainer">
+                <!-- Rendered dynamically -->
+              </div>
+
+              <!-- Educational Background Summary -->
+              <div class="education-summary-card">
+                <h4 class="edu-title"><i data-lucide="graduation-cap" class="icon-sm text-cyan"></i> Educational Background & Acceleration Timeline</h4>
+                <ul class="edu-timeline" id="eduTimeline">
+                  <!-- Rendered dynamically -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 2: GENERATIONAL ROI & YIELD CALCULATOR ================= -->
+        <section id="tab-roi-calculator" class="view-panel">
+          <div class="section-banner-roi">
+            <div class="roi-intro">
+              <div class="roi-badge"><i data-lucide="calculator" class="icon-xs"></i> PROPRIETARY ACTUARIAL MODEL</div>
+              <h2 class="roi-headline">Generational Succession ROI & Capital Preservation Yield</h2>
+              <p class="roi-desc">
+                Heirloom shifts child development from a 25-year financial liability into a compressed, high-yielding generational asset. Analyze the capital saved from bypassed traditional schooling and the lifetime revenue multiple generated by starting senior professional practice before biological adolescence.
+              </p>
+            </div>
+            <div class="roi-quick-badge">
+              <span class="big-kpi" id="kpiBreakEvenAge">AGE 11.4</span>
+              <span class="sub-kpi">INVESTMENT BREAK-EVEN ACHIEVED</span>
+            </div>
+          </div>
+
+          <!-- INTERACTIVE CALCULATOR GRID -->
+          <div class="dashboard-grid-2">
+            <!-- Control Panel -->
+            <div class="panel-card interactive-form-panel">
+              <div class="panel-header">
+                <div class="panel-title-cluster">
+                  <i data-lucide="sliders" class="panel-icon text-gold"></i>
+                  <div>
+                    <h3 class="panel-title">Actuarial Parameter Tuning</h3>
+                    <p class="panel-subtitle">Simulate succession variables for <span class="text-gold" id="roiChildName">Leo</span></p>
+                  </div>
+                </div>
+                <button id="resetRoiBtn" class="pill-btn-sm">RESET DEFAULTS</button>
+              </div>
+
+              <div class="sliders-list">
+                <div class="slider-group">
+                  <div class="slider-meta">
+                    <label class="slider-label">Cumulative Heirloom Ingestion Investment</label>
+                    <span class="slider-display" id="valInvestment">$380,000 SGD</span>
+                  </div>
+                  <input type="range" id="inputInvestment" min="150000" max="800000" step="10000" value="380000" class="custom-range">
+                  <span class="slider-hint">Includes hardware leases, neural cloud backup, and senior licensing fees.</span>
+                </div>
+
+                <div class="slider-group">
+                  <div class="slider-meta">
+                    <label class="slider-label">Professional Practice Commencement Age</label>
+                    <span class="slider-display" id="valPracticeAge">Age 12.6</span>
+                  </div>
+                  <input type="range" id="inputPracticeAge" min="10.5" max="18.0" step="0.1" value="12.6" class="custom-range">
+                  <span class="slider-hint">Standard medical qualification in Singapore traditionally occurs at Age 27–29.</span>
+                </div>
+
+                <div class="slider-group">
+                  <div class="slider-meta">
+                    <label class="slider-label">Initial Annual Successor Billings / Salary</label>
+                    <span class="slider-display" id="valStartingSalary">$260,000 SGD/yr</span>
+                  </div>
+                  <input type="range" id="inputStartingSalary" min="120000" max="600000" step="10000" value="260000" class="custom-range">
+                  <span class="slider-hint">Based on junior partner billings at private clinic or family practice.</span>
+                </div>
+
+                <div class="slider-group">
+                  <div class="slider-meta">
+                    <label class="slider-label">Traditional Elite Tutoring & Ivy/Oxf-Camb Tuition Bypassed</label>
+                    <span class="slider-display" id="valTuitionSaved">$650,000 SGD</span>
+                  </div>
+                  <input type="range" id="inputTuitionSaved" min="200000" max="1200000" step="25000" value="650000" class="custom-range">
+                  <span class="slider-hint">Elite private primary, junior college, and overseas clinical training bypassed.</span>
+                </div>
+              </div>
+
+              <div class="toggle-cluster">
+                <label class="toggle-card">
+                  <input type="checkbox" id="toggleInflation" checked>
+                  <div class="toggle-custom"></div>
+                  <div class="toggle-text">
+                    <span class="toggle-title">Compound Generational Asset Growth (5.5% CAGR)</span>
+                    <span class="toggle-desc">Reinvest early billings into family sovereign trusts immediately.</span>
+                  </div>
+                </label>
+
+                <label class="toggle-card">
+                  <input type="checkbox" id="toggleSocialPrestige" checked>
+                  <div class="toggle-custom"></div>
+                  <div class="toggle-text">
+                    <span class="toggle-title">Family Brand & Goodwill Premium (+20%)</span>
+                    <span class="toggle-desc">Retain hereditary client roster with zero downtime between generations.</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Yield Summary & Actuarial Readout -->
+            <div class="panel-card roi-readout-card">
+              <div class="panel-header">
+                <div class="panel-title-cluster">
+                  <i data-lucide="pie-chart" class="panel-icon text-cyan"></i>
+                  <div>
+                    <h3 class="panel-title">Succession Capital Accretion</h3>
+                    <p class="panel-subtitle">Financial comparison over 20-year horizon</p>
+                  </div>
+                </div>
+                <span class="status-pill verified">ACTUARIALLY AUDITED</span>
+              </div>
+
+              <div class="roi-pillar-grid">
+                <div class="roi-pillar">
+                  <span class="pillar-title">YEARS OF PRODUCTIVITY GAINED</span>
+                  <span class="pillar-big text-cyan" id="statYearsGained">+14.4 Yrs</span>
+                  <span class="pillar-sub">vs. Biological Medical Track</span>
+                </div>
+                <div class="roi-pillar">
+                  <span class="pillar-title">NET WEALTH MULTIPLIER</span>
+                  <span class="pillar-big text-gold" id="statWealthMultiplier">4.28×</span>
+                  <span class="pillar-sub">Over traditional legacy model</span>
+                </div>
+                <div class="roi-pillar">
+                  <span class="pillar-title">TOTAL FAMILY GAIN BY AGE 30</span>
+                  <span class="pillar-big text-emerald" id="statTotalNetGain">$4,820,000 SGD</span>
+                  <span class="pillar-sub">Amortized net surplus</span>
+                </div>
+              </div>
+
+              <div class="chart-container-roi">
+                <canvas id="roiComparisonChart"></canvas>
+              </div>
+
+              <div class="speculative-callout-roi">
+                <i data-lucide="info" class="icon-sm text-gold"></i>
+                <p>
+                  <strong>Cultural Wealth Note:</strong> In traditional societies, the Tan family would bear 27 years of educational costs before Leo produced revenue. Under Heirloom, Leo enters practice at age 12.6, turning his childhood into the family’s highest-performing dividend asset.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 3: CAREER PATHWAY & LICENSURE ================= -->
+        <section id="tab-certifications" class="view-panel">
+          <div class="cert-header-cluster">
+            <div>
+              <div class="title-row">
+                <h2 class="section-heading">Career Pathway Progression & Accreditation</h2>
+                <span class="tag-elite">STATUTORY ACCREDITATION</span>
+              </div>
+              <p class="section-sub">
+                Tracking official governmental and institutional certifications granted to <span class="text-gold" id="certChildName">Leo</span> based on verified nocturnal synaptic downloads and practical clinical trials.
+              </p>
+            </div>
+            <button id="viewOfficialCertBtn" class="gold-cta-btn">
+              <i data-lucide="award" class="icon-sm"></i> INSPECT OFFICIAL ACCREDITATION CERTIFICATE
+            </button>
+          </div>
+
+          <!-- CURRENT TARGET HIGHLIGHT -->
+          <div class="target-milestone-banner">
+            <div class="target-left">
+              <div class="target-icon-bubble">
+                <i data-lucide="stethoscope" class="icon-lg text-gold"></i>
+              </div>
+              <div>
+                <span class="target-badge">CURRENT ACTIVE OBJECTIVE</span>
+                <h3 class="target-title" id="certActiveTitle">MOH Class B Junior Surgical Practitioner License</h3>
+                <p class="target-desc" id="certActiveDesc">Authorized to perform supervised laparoscopic and vascular procedures under parent Dr. Marcus Tan.</p>
+              </div>
+            </div>
+            <div class="target-right">
+              <div class="progress-ring-block">
+                <div class="progress-text-block">
+                  <span class="progress-pct" id="certActivePct">92.4%</span>
+                  <span class="progress-lbl">HOURS LOGGED: 462 / 500h</span>
+                </div>
+                <div class="progress-bar-linear">
+                  <div class="progress-fill" style="width: 92.4%;"></div>
+                </div>
+              </div>
+              <span class="target-days-left"><i data-lucide="clock" class="icon-xs"></i> 42 DAYS UNTIL FORMAL INVESTITURE</span>
+            </div>
+          </div>
+
+          <!-- MILESTONE TIMELINE LIST -->
+          <div class="cert-cards-grid" id="certificationsGrid">
+            <!-- Dynamically populated via JS -->
+          </div>
+
+          <!-- ACADEMIC CURRICULUM ACCELERATION TABLE -->
+          <div class="panel-card mt-6">
+            <div class="panel-header">
+              <div class="panel-title-cluster">
+                <i data-lucide="book-open" class="panel-icon text-cyan"></i>
+                <div>
+                  <h3 class="panel-title">Curriculum Replacement & Accelerated Equivalencies</h3>
+                  <p class="panel-subtitle">How traditional Singapore MOE Primary/Secondary curriculum is replaced with Heirloom Ingestion</p>
+                </div>
+              </div>
+              <span class="status-pill verified">MOE EXEMPTION ORDER #2026-HLM</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table" id="curriculumTable">
+                <thead>
+                  <tr>
+                    <th>Age Tier</th>
+                    <th>Standard MOE Track</th>
+                    <th>Heirloom Successor Ingestion</th>
+                    <th>Equivalency Level</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="curriculumTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 4: HERITAGE & CAMPAIGN ARCHIVES ================= -->
+        <section id="tab-collateral" class="view-panel">
+          <div class="collateral-header">
+            <div>
+              <h2 class="section-heading">Heirloom Archival & Public Campaign Records</h2>
+              <p class="section-sub">Official promotional campaign assets, statutory certificates, and generational pedigree documentation.</p>
+            </div>
+          </div>
+
+          <div class="collateral-grid">
+            <!-- Item 1: New Official Campaign Poster -->
+            <div class="collateral-card">
+              <div class="media-thumb-wrapper" onclick="openLightbox('assets/heirloom_campaign_new.png', 'Official National Campaign: Reclaim Time. Secure Destiny.', 'Singapore transit and print campaign featuring Subject Elena (Age 38, Senior Litigation Partner) and Subject Leo (Age 12, Elite Aspirant Pathway). Headline: \'The Smart Nation Choice for Smarter People.\'')">
+                <img src="assets/heirloom_campaign_new.png" alt="Heirloom National Poster" class="media-thumb">
+                <div class="media-zoom-overlay">
+                  <i data-lucide="maximize-2"></i>
+                  <span>INSPECT NATIONAL CAMPAIGN POSTER</span>
+                </div>
+              </div>
+              <div class="collateral-info">
+                <span class="collateral-tag cyan">PUBLIC CAMPAIGN</span>
+                <h4 class="collateral-title">"Reclaim Time. Secure Destiny." (National Campaign)</h4>
+                <p class="collateral-desc">Featuring Subject Elena (Age 38, Senior Litigation Partner, 99.8% Efficiency) and Subject Leo (Age 12, Elite Aspirant Pathway). Highlighting Singaporean Citizen-Elite accreditation.</p>
+              </div>
+            </div>
+
+            <!-- Item 2: Official Certificate of Achievement -->
+            <div class="collateral-card">
+              <div class="media-thumb-wrapper" onclick="openLightbox('assets/heirloom_certificate.jpg', 'Certificate of Achievement and Elite Accreditation', 'Official statutory credential issued to the successor upon completion of behavioral and intellectual transmission. Features official seal and Prompter signatures.')">
+                <img src="assets/heirloom_certificate.jpg" alt="Official Certificate of Achievement" class="media-thumb">
+                <div class="media-zoom-overlay">
+                  <i data-lucide="maximize-2"></i>
+                  <span>INSPECT STATUTORY CERTIFICATE</span>
+                </div>
+              </div>
+              <div class="collateral-info">
+                <span class="collateral-tag gold">ACCREDITATION</span>
+                <h4 class="collateral-title">Certificate of Achievement & Elite Accreditation</h4>
+                <p class="collateral-desc">Official certificate verifying successful cognitive and behavioral optimisation: "We do not just build careers; we secure destiny. This is NOT a school. It is the NEW standard."</p>
+              </div>
+            </div>
+
+            <!-- Item 3: Ancestral Family Portrait -->
+            <div class="collateral-card">
+              <div class="media-thumb-wrapper" onclick="openLightbox('assets/family_portrait.jpg', 'The Tan Medical Dynasty — Ancestral Portrait', 'Three generations of medical leadership in Singapore. Grandfather Prof. K.L. Tan seated center with grandmother; son Dr. Marcus Tan (standing left) and daughter-in-law Dr. Evelyn Tan; great-grandsons prepared for the lineage.')">
+                <img src="assets/family_portrait.jpg" alt="Dynasty Family Portrait" class="media-thumb">
+                <div class="media-zoom-overlay">
+                  <i data-lucide="maximize-2"></i>
+                  <span>INSPECT DESK PORTRAIT</span>
+                </div>
+              </div>
+              <div class="collateral-info">
+                <span class="collateral-tag emerald">FAMILY ARCHIVE</span>
+                <h4 class="collateral-title">The Tan Medical Dynasty (Mount Elizabeth Penthouse)</h4>
+                <p class="collateral-desc">The original framed photograph displayed on the grandfather’s mahogany study desk. Shows three generations united in clinical distinction.</p>
+              </div>
+            </div>
+
+            <!-- Item 4: Heirloom Headset Hardware Unit -->
+            <div class="collateral-card">
+              <div class="media-thumb-wrapper" onclick="openLightbox('assets/aura2_full.jpg', 'Heirloom Synapse-V™ Studio Angles', 'Four-angle precision engineering showcase of the titanium neural-conduction headband.')">
+                <img src="assets/aura2_full.jpg" alt="Heirloom Headset Device" class="media-thumb">
+                <div class="media-zoom-overlay">
+                  <i data-lucide="maximize-2"></i>
+                  <span>INSPECT HARDWARE SHOWCASE</span>
+                </div>
+              </div>
+              <div class="collateral-info">
+                <span class="collateral-tag gold">HARDWARE UNIT</span>
+                <h4 class="collateral-title">Heirloom Synapse-V™ Studio Showcase</h4>
+                <p class="collateral-desc">The official neural-conduction headband worn during sleep. Lightweight ergonomic titanium chassis with micro-sensor telemetry and local mesh encryption.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div> <!-- END VIEW 2: DASHBOARD -->
+
+
+  <!-- =========================================================================
+       MODALS & LIGHTBOXES
+       ========================================================================= -->
 
   <!-- LIGHTBOX MODAL -->
   <div id="lightboxModal" class="modal-backdrop">
@@ -712,51 +1055,20 @@
     </div>
   </div>
 
-  <!-- OFFICIAL CERTIFICATE MODAL -->
+  <!-- OFFICIAL CERTIFICATE MODAL (DISPLAYS THE HIGH-RES CERTIFICATE IMAGE) -->
   <div id="certificateModal" class="modal-backdrop">
     <div class="cert-modal-box">
       <button class="modal-close-btn" onclick="closeCertModal()"><i data-lucide="x"></i></button>
-      
-      <div class="plaque-outer">
-        <div class="plaque-inner">
-          <div class="plaque-header">
-            <div class="plaque-crest">H</div>
-            <span class="plaque-gov">REPUBLIC OF SINGAPORE • MINISTRY OF HEALTH & MANPOWER</span>
-            <h2 class="plaque-title">ELITE PATHWAY ACCREDITATION</h2>
-            <span class="plaque-sub">OFFICIAL STATUTORY LICENSE & SUCCESSION DECREE</span>
+      <div class="cert-image-frame">
+        <img src="assets/heirloom_certificate.jpg" alt="Official Heirloom Certificate" class="cert-full-image">
+        <div class="cert-caption-ribbon">
+          <div>
+            <h3 class="cert-modal-caption-title">OFFICIAL STATUTORY ACCREDITATION</h3>
+            <p class="cert-modal-caption-sub">Certificate of Achievement and Elite Accreditation — Republic of Singapore Resident Citizen-Elite Registry</p>
           </div>
-
-          <div class="plaque-body">
-            <p class="plaque-certify-text">This certifies that Subject</p>
-            <h3 class="plaque-candidate" id="modalCertCandidate">LEO TAN (AGE 12)</h3>
-            <p class="plaque-award-desc">
-              Having successfully demonstrated <strong>99.8% assimilation</strong> of Third-Generation Cardiothoracic Surgical Knowledge through the <em>Heirloom Synapse Transmission System</em>, is hereby granted:
-            </p>
-            <div class="plaque-designation">
-              MOH CLASS B JUNIOR CLINICAL SURGEON
-            </div>
-            <div class="plaque-attributes">
-              <span>COGNITIVE RANK: TOP 0.01% NATIONWIDE</span>
-              <span>•</span>
-              <span>VOCATIONAL SENIORITY: 31.8 YEARS EQUIVALENT</span>
-            </div>
-          </div>
-
-          <div class="plaque-signatures">
-            <div class="sig-block">
-              <div class="sig-line">Dr. Marcus Tan, MD, FAMS</div>
-              <span class="sig-title">Senior Donor & Father</span>
-            </div>
-            <div class="sig-seal">
-              <div class="seal-ring">
-                <span>HEIRLOOM VERIFIED</span>
-              </div>
-            </div>
-            <div class="sig-block">
-              <div class="sig-line">Elena Lim, Director</div>
-              <span class="sig-title">Specialised Parenting Prompter Office</span>
-            </div>
-          </div>
+          <button class="pill-btn-sm" onclick="openLightbox('assets/heirloom_certificate.jpg', 'Official Heirloom Accreditation Certificate', 'Verified statutory credential issued to the successor upon completing intellectual and procedural skill transmission.')">
+            <i data-lucide="zoom-in" class="icon-xs"></i> FULL RESOLUTION
+          </button>
         </div>
       </div>
     </div>
