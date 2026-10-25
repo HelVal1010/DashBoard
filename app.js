@@ -397,6 +397,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initRoiCalculator();
   initModals();
   init3DBrainSimulation();
+  initDynamicBackgroundShifter();
+  initHeroParallax();
+  initCounterAnimations();
 
   // Load Leo Tan default profile
   loadChildProfile('leo');
@@ -515,6 +518,8 @@ function switchView(viewName, targetTab = null, childKey = null) {
   const publicNav = document.getElementById('publicNavLinks');
   const portalPill = document.getElementById('portalDonorRecipientPill');
   const headerSubject = document.getElementById('headerSubjectWrapper');
+  const brandStatusBadge = document.getElementById('brandStatusBadge');
+  const mainHeader = document.getElementById('mainHeader');
 
   if (childKey) {
     loadChildProfile(childKey);
@@ -530,6 +535,13 @@ function switchView(viewName, targetTab = null, childKey = null) {
     if (publicNav) publicNav.style.display = 'flex';
     if (portalPill) portalPill.style.display = 'none';
     if (headerSubject) headerSubject.style.display = 'none';
+
+    // Request 3: Hide Citizen-Elite tier badge on public website
+    if (brandStatusBadge) brandStatusBadge.style.display = 'none';
+
+    // Request 1: Dynamic seamless page background color shift
+    updateDynamicBackground();
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
     if (viewWebsite) viewWebsite.style.display = 'none';
@@ -539,6 +551,15 @@ function switchView(viewName, targetTab = null, childKey = null) {
     if (publicNav) publicNav.style.display = 'none';
     if (portalPill) portalPill.style.display = 'flex';
     if (headerSubject) headerSubject.style.display = 'flex';
+
+    // Request 3: Reappear Citizen-Elite tier badge in Member Portal
+    if (brandStatusBadge) brandStatusBadge.style.display = 'inline-flex';
+
+    // Member portal uses obsidian dark theme
+    if (mainHeader) {
+      mainHeader.classList.remove('nav-light');
+      mainHeader.classList.add('nav-dark');
+    }
 
     if (targetTab) {
       const navBtn = document.querySelector(`.sidebar-nav .nav-item[data-tab="${targetTab}"]`);
@@ -556,6 +577,149 @@ function switchView(viewName, targetTab = null, childKey = null) {
   }
 
   if (window.lucide) window.lucide.createIcons();
+}
+
+/**
+ * =========================================================================
+ * APPLE-STYLE DYNAMIC BACKGROUND COLOR SHIFT (IMAGE 1 FIX)
+ * The entire viewport canvas smoothly transitions color between sections
+ * =========================================================================
+ */
+function updateDynamicBackground() {
+  const pageView = document.getElementById('view-website');
+  const mainHeader = document.getElementById('mainHeader');
+  if (!pageView) return;
+
+  if (state.currentView !== 'website') {
+    if (mainHeader) {
+      mainHeader.classList.remove('nav-light');
+      mainHeader.classList.add('nav-dark');
+    }
+    return;
+  }
+
+  const sections = Array.from(document.querySelectorAll('#view-website [data-theme]'));
+  if (sections.length === 0) return;
+
+  const scrollY = window.scrollY || window.pageYOffset;
+  const viewportCenter = scrollY + (window.innerHeight * 0.45);
+
+  let currentSection = sections[0];
+  for (const sec of sections) {
+    const top = sec.offsetTop;
+    if (viewportCenter >= top - 80) {
+      currentSection = sec;
+    }
+  }
+
+  const theme = currentSection.getAttribute('data-theme') || 'light';
+  const bg = currentSection.getAttribute('data-bg') || (theme === 'dark' ? '#17130F' : '#F3EEE7');
+
+  pageView.style.backgroundColor = bg;
+
+  if (theme === 'dark') {
+    pageView.classList.add('theme-dark');
+    pageView.classList.remove('theme-light');
+    if (mainHeader) {
+      mainHeader.classList.remove('nav-light');
+      mainHeader.classList.add('nav-dark');
+    }
+  } else {
+    pageView.classList.remove('theme-dark');
+    pageView.classList.add('theme-light');
+    if (mainHeader) {
+      mainHeader.classList.remove('nav-dark');
+      mainHeader.classList.add('nav-light');
+    }
+  }
+}
+
+function initDynamicBackgroundShifter() {
+  window.addEventListener('scroll', updateDynamicBackground, { passive: true });
+  if (state.lenis) {
+    state.lenis.on('scroll', updateDynamicBackground);
+  }
+  updateDynamicBackground();
+}
+
+/**
+ * =========================================================================
+ * INTERACTIVE 3D PARALLAX FOR HERO DEVICE STAGE (POINT 3 MOTION)
+ * =========================================================================
+ */
+function initHeroParallax() {
+  const stage = document.getElementById('heroVisualStage');
+  const frame = document.getElementById('heroDeviceFrame');
+  if (!stage || !frame) return;
+
+  let mouseX = 0, mouseY = 0;
+  let currentX = 0, currentY = 0;
+
+  stage.addEventListener('mousemove', (e) => {
+    const rect = stage.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX = x * 8;
+    mouseY = y * -8;
+  });
+
+  stage.addEventListener('mouseleave', () => {
+    mouseX = 0;
+    mouseY = 0;
+  });
+
+  function updateParallax() {
+    currentX += (mouseX - currentX) * 0.08;
+    currentY += (mouseY - currentY) * 0.08;
+
+    frame.style.transform = `rotateY(${currentX.toFixed(2)}deg) rotateX(${currentY.toFixed(2)}deg) translateY(${(-Math.abs(currentX) * 0.4).toFixed(1)}px)`;
+    requestAnimationFrame(updateParallax);
+  }
+  requestAnimationFrame(updateParallax);
+}
+
+/**
+ * =========================================================================
+ * FLUID METRIC COUNTER ANIMATIONS (POINT 3 MOTION)
+ * =========================================================================
+ */
+function initCounterAnimations() {
+  if (typeof ScrollTrigger === 'undefined') return;
+
+  const actuarialTiles = document.querySelectorAll('.abg-num');
+  actuarialTiles.forEach(tile => {
+    const originalText = tile.innerText;
+
+    ScrollTrigger.create({
+      trigger: tile,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => {
+        if (originalText.includes('+15.4')) {
+          animateValue(tile, 0, 15.4, 1500, (v) => `+${v.toFixed(1)} Yrs`);
+        } else if (originalText.includes('650,000')) {
+          animateValue(tile, 0, 650000, 1600, (v) => `$${Math.round(v).toLocaleString()}+`);
+        } else if (originalText.includes('4.28')) {
+          animateValue(tile, 1, 4.28, 1400, (v) => `${v.toFixed(2)}×`);
+        }
+      }
+    });
+  });
+
+  function animateValue(obj, start, end, duration, formatFn) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      const current = start + (end - start) * easeProgress;
+      obj.innerText = formatFn(current);
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    };
+    requestAnimationFrame(step);
+  }
 }
 
 function jumpToChildProfile(childKey) {
@@ -713,6 +877,15 @@ function loadChildProfile(key) {
   if (portalEquivExp) portalEquivExp.innerText = child.equivExp;
   const publicEquivExp = document.getElementById('publicEquivExp');
   if (publicEquivExp) publicEquivExp.innerText = child.equivExp;
+
+  // Hero Edge-Following Annotations (Apple-Style)
+  const heroStatIntegration = document.getElementById('heroStatIntegration');
+  if (heroStatIntegration) heroStatIntegration.innerText = `${child.integrationPct}%`;
+  const heroStatEquivExp = document.getElementById('heroStatEquivExp');
+  if (heroStatEquivExp) {
+    const yearsNum = child.equivExp.replace('YEARS GAINED', '').replace('~', '').trim();
+    heroStatEquivExp.innerText = `~${yearsNum}`;
+  }
 
   // Transfer Statistics in Tab 0
   const statSessions = document.getElementById('statSessionsCount');

@@ -31,7 +31,7 @@
         <a href="#hero-website" class="brand-link" id="navLogoBtn" title="Heirloom Generational Intelligence">
           <img src="assets/heirloom_logo.svg" alt="HEIRLOOM" class="brand-svg-logo">
         </a>
-        <span class="status-pill verified" id="brandStatusBadge">
+        <span class="status-pill verified" id="brandStatusBadge" style="display: none;">
           <i data-lucide="shield-check" class="icon-xs"></i> CITIZEN-ELITE TIER
         </span>
       </div>
@@ -94,7 +94,7 @@
   <div id="view-website" class="website-page-view">
     
     <!-- HERO SECTION (MATCHING MOODBOARD 05 WEBSITE HOMEPAGE) -->
-    <section id="hero-website" class="website-hero-section">
+    <section id="hero-website" class="website-hero-section" data-theme="light" data-bg="#F3EEE7">
       <div class="website-hero-content">
         <div class="editorial-eyebrow gsap-hero">
           <span class="eyebrow-accent"></span>
@@ -122,26 +122,45 @@
         </div>
       </div>
 
-      <!-- HERO DEVICE SHOWCASE (PRODUCT APPLICATION 06) -->
-      <div class="website-hero-visual gsap-hero">
-        <div class="device-pedestal-card">
-          <img src="assets/aura2_full.jpg" alt="Heirloom Synapse-V Headpiece" class="device-hero-img">
-          
-          <div class="device-floating-tag tag-top">
-            <span class="tag-label">NEURAL INTEGRATION</span>
-            <strong class="tag-val text-amber">68% Completed • Month 04 / 06</strong>
+      <!-- HERO DEVICE SHOWCASE (APPLE-STYLE EDGE-FOLLOWING ANNOTATIONS — PRECISE ALIGNMENT) -->
+      <div class="website-hero-visual gsap-hero" id="heroVisualStage">
+        <div class="device-stage-wrapper" id="deviceStageWrapper">
+          <!-- Top-Shelf Edge Annotation: Right-Aligned Completely Above Frame -->
+          <div class="edge-annotation top-shelf">
+            <div class="ea-eyebrow">
+              <span>NEURAL INTEGRATION</span>
+              <span class="ea-dot amber-pulse"></span>
+            </div>
+            <div class="ea-metric">
+              <span class="ea-stat" id="heroStatIntegration">68%</span>
+              <span class="ea-label">Completed &bull; Month 04 / 06</span>
+            </div>
+            <div class="ea-hairline-right"></div>
           </div>
 
-          <div class="device-floating-tag tag-bottom">
-            <span class="tag-label">EQUIVALENT CLINICAL EXPERIENCE</span>
-            <strong class="tag-val text-champagne">~13.6 Years Gained</strong>
+          <!-- Product Image Frame (Borderless, Floating) -->
+          <div class="device-image-frame" id="heroDeviceFrame">
+            <img src="assets/aura2_full.jpg" alt="Heirloom Synapse-V Headpiece" class="device-hero-img">
+          </div>
+
+          <!-- Bottom-Shelf Edge Annotation: Left-Aligned Completely Below Frame -->
+          <div class="edge-annotation bottom-shelf">
+            <div class="ea-hairline-left"></div>
+            <div class="ea-eyebrow">
+              <span class="ea-dot champagne"></span>
+              <span>EQUIVALENT CLINICAL EXPERIENCE</span>
+            </div>
+            <div class="ea-metric">
+              <span class="ea-stat" id="heroStatEquivExp">~13.6</span>
+              <span class="ea-label">Years Gained &bull; Clinical Fellowship Standing</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- EDITORIAL BANNER: "EVERYTHING YOU'VE BECOME" (MOODBOARD 02) -->
-    <section class="editorial-quote-banner">
+    <section class="editorial-quote-banner" data-theme="dark" data-bg="#17130F">
       <div class="quote-inner-container gsap-reveal">
         <span class="quote-kicker">THE HEIRLOOM DOCTRINE</span>
         <h2 class="editorial-display-heading">
@@ -155,7 +174,7 @@
     </section>
 
     <!-- SECTION: 04 — HOLOGRAPHIC OS SHOWCASE (PREVIEW IN WEBSITE) -->
-    <section id="section-holo-os" class="holo-os-section">
+    <section id="section-holo-os" class="holo-os-section" data-theme="dark" data-bg="#17130F">
       <div class="section-container">
         <div class="section-header-centered gsap-reveal">
           <span class="section-badge-amber">04 — HOLOGRAPHIC OS</span>
@@ -314,7 +333,7 @@
     </section>
 
     <!-- SECTION: 3 SUCCESSION PATHWAYS -->
-    <section id="section-pathways" class="pathways-section">
+    <section id="section-pathways" class="pathways-section" data-theme="light" data-bg="#F3EEE7">
       <div class="section-container">
         <div class="section-header-centered gsap-reveal">
           <span class="section-badge-amber">03 — SUCCESSOR PROFILES</span>
@@ -428,7 +447,7 @@
     </section>
 
     <!-- SECTION: ACTUARIAL FORMULA & PRESERVATION YIELD -->
-    <section id="section-actuarial" class="actuarial-section">
+    <section id="section-actuarial" class="actuarial-section" data-theme="light" data-bg="#EAE3D6">
       <div class="section-container">
         <div class="actuarial-banner-grid gsap-reveal">
           <div class="abg-left">
@@ -466,7 +485,7 @@
     </section>
 
     <!-- SECTION: GALLERY & DOCUMENTATION -->
-    <section id="section-gallery" class="gallery-section">
+    <section id="section-gallery" class="gallery-section" data-theme="light" data-bg="#F3EEE7">
       <div class="section-container">
         <div class="section-header-centered gsap-reveal">
           <span class="section-badge-amber">STATUTORY ASSETS</span>
@@ -503,7 +522,7 @@
     </section>
 
     <!-- WEBSITE FOOTER -->
-    <footer class="website-footer">
+    <footer class="website-footer" data-theme="dark" data-bg="#17130F">
       <div class="footer-container">
         <div class="footer-top-row">
           <img src="assets/heirloom_logo.svg" alt="HEIRLOOM" class="footer-logo-img">

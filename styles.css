@@ -97,18 +97,92 @@ body {
 .icon-lg { width: 26px; height: 26px; }
 
 /* ==========================================================================
-   GLOBAL TOP BAR (DUAL-MODE PRESTIGE NAVIGATION)
+   GLOBAL TOP BAR (DUAL-MODE PRESTIGE NAVIGATION — APPLE ADAPTIVE THEME)
    ========================================================================== */
 .top-nav {
   position: sticky;
   top: 0;
   z-index: 500;
-  background: rgba(23, 19, 15, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(228, 200, 164, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: 0.85rem 2.5rem;
-  transition: all 0.3s ease;
+  transition: background-color 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              border-color 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Light Theme (Over Hero and Light Panels on Public Website) */
+.top-nav.nav-light {
+  background: rgba(243, 238, 231, 0.84);
+  border-bottom: 1px solid rgba(56, 40, 30, 0.08);
+  box-shadow: 0 4px 20px rgba(56, 40, 30, 0.03);
+}
+
+.top-nav.nav-light .brand-svg-logo {
+  filter: brightness(0.18) sepia(0.25) saturate(1.8);
+}
+
+.top-nav.nav-light .p-nav-link {
+  color: #6a625b;
+}
+
+.top-nav.nav-light .p-nav-link:hover,
+.top-nav.nav-light .p-nav-link.active {
+  color: var(--deep-charcoal);
+}
+
+.top-nav.nav-light .p-nav-link.active::after {
+  background: var(--warm-amber);
+}
+
+.top-nav.nav-light .view-mode-pill {
+  background: rgba(56, 40, 30, 0.06);
+  border: 1px solid rgba(56, 40, 30, 0.14);
+}
+
+.top-nav.nav-light .view-toggle-btn {
+  color: #6a625b;
+}
+
+.top-nav.nav-light .view-toggle-btn:hover {
+  color: var(--deep-charcoal);
+}
+
+/* Dark Theme (Over Dark Panels or in Member Portal) */
+.top-nav.nav-dark {
+  background: rgba(23, 19, 15, 0.88);
+  border-bottom: 1px solid rgba(228, 200, 164, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.top-nav.nav-dark .brand-svg-logo {
+  filter: drop-shadow(0 2px 8px rgba(228, 200, 164, 0.2));
+}
+
+.top-nav.nav-dark .p-nav-link {
+  color: var(--warm-grey);
+}
+
+.top-nav.nav-dark .p-nav-link:hover,
+.top-nav.nav-dark .p-nav-link.active {
+  color: var(--liquid-champagne);
+}
+
+.top-nav.nav-dark .p-nav-link.active::after {
+  background: var(--liquid-champagne);
+}
+
+.top-nav.nav-dark .view-mode-pill {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(228, 200, 164, 0.18);
+}
+
+.top-nav.nav-dark .view-toggle-btn {
+  color: var(--warm-grey);
+}
+
+.top-nav.nav-dark .view-toggle-btn:hover {
+  color: var(--pearl-white);
 }
 
 .nav-container {
@@ -322,6 +396,8 @@ body {
   color: var(--deep-charcoal);
   min-height: 100vh;
   position: relative;
+  transition: background-color 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              color 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Section Containers */
@@ -406,8 +482,19 @@ body {
 
 .serif-italic-title {
   font-style: italic;
-  font-weight: 400;
-  color: var(--warm-amber);
+  font-weight: 500;
+  background: linear-gradient(110deg, #C85A24 0%, #E5A93C 28%, #F5BD47 50%, #D48B28 72%, #C85A24 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: liquidGoldShimmer 6s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes liquidGoldShimmer {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
 }
 
 .website-hero-subtitle {
@@ -471,84 +558,187 @@ body {
   background: rgba(56, 40, 30, 0.05);
 }
 
-/* Hero Device Pedestal */
+/* ==========================================================================
+   HERO DEVICE SHOWCASE: APPLE-STYLE EDGE-FOLLOWING TYPOGRAPHY (IMAGE 2 FIX)
+   Callouts docked cleanly above and below image frame (0% overlap)
+   ========================================================================== */
 .website-hero-visual {
   display: flex;
   justify-content: center;
+  align-items: center;
+  position: relative;
+  perspective: 1200px;
 }
 
-.device-pedestal-card {
+.device-stage-wrapper {
   position: relative;
-  background: radial-gradient(circle at center, #ffffff 0%, #ebe3d8 100%);
-  border-radius: 28px;
-  padding: 2.5rem;
-  box-shadow: 0 25px 60px rgba(56, 40, 30, 0.14);
-  border: 1px solid rgba(228, 200, 164, 0.4);
-  max-width: 520px;
   width: 100%;
+  max-width: 530px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.edge-annotation {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  z-index: 10;
+  transition: transform 0.3s ease;
+}
+
+/* Top-Shelf Annotation: Right-Aligned Completely Above Frame */
+.edge-annotation.top-shelf {
+  align-items: flex-end;
+  text-align: right;
+  padding-right: 0.25rem;
+}
+
+.edge-annotation.top-shelf .ea-eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--muted-copper);
+  margin-bottom: 0.15rem;
+}
+
+.edge-annotation.top-shelf .ea-metric {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.ea-hairline-right {
+  width: 70px;
+  height: 1px;
+  background: linear-gradient(270deg, var(--warm-amber), transparent);
+  margin-top: 0.35rem;
+  opacity: 0.7;
+}
+
+/* Bottom-Shelf Annotation: Left-Aligned Completely Below Frame */
+.edge-annotation.bottom-shelf {
+  align-items: flex-start;
+  text-align: left;
+  padding-left: 0.25rem;
+}
+
+.edge-annotation.bottom-shelf .ea-eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--muted-copper);
+  margin-bottom: 0.15rem;
+}
+
+.edge-annotation.bottom-shelf .ea-metric {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.ea-hairline-left {
+  width: 70px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--warm-amber), transparent);
+  margin-bottom: 0.35rem;
+  opacity: 0.7;
+}
+
+.ea-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.ea-dot.amber-pulse {
+  background: var(--warm-amber);
+  box-shadow: 0 0 8px var(--warm-amber);
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+.ea-dot.champagne {
+  background: var(--liquid-champagne);
+  box-shadow: 0 0 6px var(--liquid-champagne);
+}
+
+.ea-stat {
+  font-family: var(--font-serif);
+  font-size: 2.35rem;
+  font-weight: 700;
+  color: var(--deep-charcoal);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.ea-label {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6a625b;
+  letter-spacing: 0.02em;
+}
+
+.device-image-frame {
+  width: 100%;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(56, 40, 30, 0.14), 0 6px 18px rgba(56, 40, 30, 0.08);
+  background: #ffffff;
+  position: relative;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.device-image-frame:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 35px 80px rgba(56, 40, 30, 0.2), 0 8px 22px rgba(56, 40, 30, 0.1);
 }
 
 .device-hero-img {
   width: 100%;
   height: auto;
-  border-radius: 18px;
   display: block;
   object-fit: cover;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  transition: transform 0.4s ease;
 }
 
-.device-pedestal-card:hover .device-hero-img {
-  transform: scale(1.02);
+/* ==========================================================================
+   DYNAMIC UNIFIED BACKGROUND COLOR SHIFTING (IMAGE 1 FIX)
+   Every section is transparent so the entire page canvas smoothly shifts
+   ========================================================================== */
+.website-hero-section,
+.editorial-quote-banner,
+.holo-os-section,
+.pathways-section,
+.actuarial-section,
+.gallery-section,
+.website-footer {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-.device-floating-tag {
-  position: absolute;
-  background: rgba(23, 19, 15, 0.88);
-  color: var(--pearl-white);
-  padding: 0.75rem 1.15rem;
-  border-radius: 14px;
-  border: 1px solid rgba(228, 200, 164, 0.25);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(10px);
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  z-index: 10;
-}
-
-.device-floating-tag.tag-top {
-  top: 1rem;
-  right: -1rem;
-}
-
-.device-floating-tag.tag-bottom {
-  bottom: 1.5rem;
-  left: -1rem;
-}
-
-.tag-label {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--warm-grey);
-}
-
-.tag-val {
-  font-size: 0.88rem;
-  font-weight: 700;
-}
-
-/* EDITORIAL QUOTE BANNER ("EVERYTHING YOU'VE BECOME") */
 .editorial-quote-banner {
-  background-color: var(--obsidian);
   color: var(--pearl-white);
-  padding: 7rem 2.5rem;
+  padding: 8.5rem 2.5rem;
   position: relative;
   overflow: hidden;
-  border-top: 1px solid rgba(228, 200, 164, 0.15);
-  border-bottom: 1px solid rgba(228, 200, 164, 0.15);
+  margin: 0;
 }
 
 .editorial-quote-banner::before {
@@ -587,8 +777,13 @@ body {
 
 .serif-italic-gold {
   font-style: italic;
-  color: var(--liquid-champagne);
   font-weight: 400;
+  background: linear-gradient(110deg, #C85A24 0%, #E5A93C 28%, #F5BD47 50%, #D48B28 72%, #C85A24 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: liquidGoldShimmer 6s ease-in-out infinite;
+  display: inline-block;
 }
 
 .quote-author-credit {
@@ -994,7 +1189,8 @@ body {
    03 — SUCCESSION PATHWAYS (PUBLIC WEBSITE)
    ========================================================================== */
 .pathways-section {
-  background-color: var(--pearl-white);
+  padding-top: 5rem;
+  position: relative;
 }
 
 .pathways-grid-3 {
@@ -1123,7 +1319,8 @@ body {
    ACTUARIAL PRESERVATION & GALLERY (PUBLIC WEBSITE)
    ========================================================================== */
 .actuarial-section {
-  background: #ebe4d8;
+  padding: 5rem 0;
+  position: relative;
 }
 
 .actuarial-banner-grid {
@@ -1178,7 +1375,8 @@ body {
 
 /* GALLERY SECTION */
 .gallery-section {
-  background: var(--pearl-white);
+  padding: 5rem 0;
+  position: relative;
 }
 
 .gallery-cards-row {
@@ -1240,10 +1438,10 @@ body {
 
 /* WEBSITE FOOTER */
 .website-footer {
-  background: var(--obsidian);
   color: var(--pearl-white);
-  padding: 4.5rem 2.5rem 3rem 2.5rem;
-  border-top: 1px solid rgba(228, 200, 164, 0.15);
+  padding: 5rem 2.5rem 3.5rem 2.5rem;
+  margin-top: 0;
+  border: none;
 }
 
 .footer-container {
