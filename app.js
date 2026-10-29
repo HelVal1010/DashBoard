@@ -7,7 +7,7 @@
 // Global Application State
 const state = {
   currentView: 'website', // 'website' | 'portal'
-  currentChild: 'leo',
+  currentChild: 'ryan',
   lenis: null,
   charts: {
     radar: null,
@@ -19,11 +19,11 @@ const state = {
 
 // Monitored Successors Database (Fictional Speculative Design Lineage)
 const childrenData = {
-  leo: {
-    key: "leo",
-    name: "Leo Tan (陈宇航)",
-    shortName: "Leo",
-    id: "HLM-SG-99420-L",
+  ryan: {
+    key: "ryan",
+    name: "Ryan Tan (陈宇航)",
+    shortName: "Ryan",
+    id: "HLM-SG-99420-R",
     badgeLabel: "HEIRLOOM ELITE PATHWAY",
     avatar: "assets/child_a_leo.png",
     pathway: "CARDIOTHORACIC SURGICAL PATHWAY",
@@ -35,7 +35,12 @@ const childrenData = {
     accreditationPct: "92.4%",
     timeToPractice: "42 DAYS",
     cognitiveRank: "COGNITIVE RANK: TOP 0.08% (14 / 18,420)",
-    voiceQuote: "\"Leo views surgical diligence as the natural expression of filial gratitude. Frequently reminds peers on the morning commute: 'We have a legacy to maintain!' No external coercion detected; ambition is entirely self-motivated.\"",
+    voiceQuote: "\"Ryan views surgical diligence as the natural expression of filial gratitude. Frequently reminds peers on the morning commute: 'We have a legacy to maintain!' No external coercion detected; ambition is entirely self-motivated.\"",
+    certImage: "assets/heirloom_certificate_ryan.jpg",
+    certModalTitle: "OFFICIAL STATUTORY ACCREDITATION — MOH SURGERY",
+    certModalSub: "Certificate of Achievement and Elite Accreditation • Republic of Singapore Resident Citizen-Elite Registry • Candidate: Ryan Tan",
+    certLightboxTitle: "Official Heirloom Accreditation Certificate — Ryan Tan",
+    certLightboxDesc: "Verified statutory credential issued to Ryan Tan upon completing intellectual and procedural surgical transmission under parent Dr. Marcus Tan.",
     prompter: "ELARA (Advisory Firm: Tan & Partners Family Office)",
     cohort: "Cohort Alpha (100% Retained Legacy)",
     dockUnitId: "HLM-V-99420-SG",
@@ -103,7 +108,7 @@ const childrenData = {
         }
       ],
       gen03: {
-        name: "Leo Tan (陈宇航)",
+        name: "Ryan Tan (陈宇航)",
         role: "MOH Class B Junior Surgical Fellow Candidate",
         avatar: "assets/child_a_leo.png",
         transmitted: "Active Assimilation (480+ Sleep Transmission Sessions)"
@@ -160,6 +165,11 @@ const childrenData = {
     timeToPractice: "74 DAYS",
     cognitiveRank: "COGNITIVE RANK: TOP 0.30% (48 / 16,200)",
     voiceQuote: "\"Danial was observed calibrating drone avionics sensor arrays during recess at school. Eagerly affirmed his family creed: 'Our family has safeguarded Singapore skies for thirty years. Why wait until university to take the flight controls?'\"",
+    certImage: "assets/heirloom_certificate_danial.jpg",
+    certModalTitle: "OFFICIAL STATUTORY ACCREDITATION — CAAS AVIONICS",
+    certModalSub: "Certificate of Achievement and Elite Accreditation • Republic of Singapore Resident Citizen-Elite Registry • Candidate: Danial bin Rahim",
+    certLightboxTitle: "Official Heirloom Accreditation Certificate — Danial bin Rahim",
+    certLightboxDesc: "Verified statutory credential issued to Danial bin Rahim upon completing supersonic telemetry and autonomous avionics firmware training under parent Ir. Iskandar bin Rahim.",
     prompter: "GARUDA (Advisory Firm: Rahim Aerospace Family Office)",
     cohort: "Cohort Beta (Aerospace & Systems Lead)",
     dockUnitId: "HLM-V-88102-SG",
@@ -279,6 +289,11 @@ const childrenData = {
     timeToPractice: "28 DAYS",
     cognitiveRank: "COGNITIVE RANK: TOP 0.04% (7 / 17,500)",
     voiceQuote: "\"Priya voluntarily studies maritime dispute arbitration precedents on her commute. Expresses immense pride in preparing to represent the family's shipping syndicate: 'Generations before me built this port; it is only proper I master its laws now.'\"",
+    certImage: "assets/heirloom_certificate_priya.jpg",
+    certModalTitle: "OFFICIAL STATUTORY ACCREDITATION — ADMIRALTY LAW",
+    certModalSub: "Certificate of Achievement and Elite Accreditation • Republic of Singapore Resident Citizen-Elite Registry • Candidate: Priya Nair",
+    certLightboxTitle: "Official Heirloom Accreditation Certificate — Priya Nair",
+    certLightboxDesc: "Verified statutory credential issued to Priya Nair upon completing maritime case law, international arbitration precedent, and judicial decorum transmission under parent Sharmila Nair, LL.M.",
     prompter: "ATHENA (Advisory Firm: Straits Legal & Admiralty Council)",
     cohort: "Cohort Maritime Elite",
     dockUnitId: "HLM-V-77314-SG",
@@ -394,15 +409,14 @@ document.addEventListener('DOMContentLoaded', () => {
   initClock();
   initTabs();
   initChildSelector();
-  initRoiCalculator();
   initModals();
   init3DBrainSimulation();
   initDynamicBackgroundShifter();
   initHeroParallax();
   initCounterAnimations();
 
-  // Load Leo Tan default profile
-  loadChildProfile('leo');
+  // Load Ryan Tan default profile
+  loadChildProfile('ryan');
 });
 
 /**
@@ -937,6 +951,21 @@ function loadChildProfile(key) {
   if (certActiveDesc) certActiveDesc.innerText = child.certDesc;
   const certActivePct = document.getElementById('certActivePct');
   if (certActivePct) certActivePct.innerText = child.certPct;
+
+  // Dynamic Candidate Certificate updates in Tab 4 & Modal
+  const archivalCertImg = document.getElementById('archivalCertImg');
+  if (archivalCertImg && child.certImage) archivalCertImg.src = child.certImage;
+  const archivalCertTitle = document.getElementById('archivalCertTitle');
+  if (archivalCertTitle) archivalCertTitle.innerText = `${child.shortName}'s Statutory Accreditation Certificate`;
+  const archivalCertDesc = document.getElementById('archivalCertDesc');
+  if (archivalCertDesc) archivalCertDesc.innerText = `Official statutory license verifying ${child.shortName}'s successful completion of ${child.pathway.toLowerCase()}.`;
+
+  const certModalFullImg = document.getElementById('certModalFullImg');
+  if (certModalFullImg && child.certImage) certModalFullImg.src = child.certImage;
+  const certModalCaptionTitle = document.getElementById('certModalCaptionTitle');
+  if (certModalCaptionTitle && child.certModalTitle) certModalCaptionTitle.innerText = child.certModalTitle;
+  const certModalCaptionSub = document.getElementById('certModalCaptionSub');
+  if (certModalCaptionSub && child.certModalSub) certModalCaptionSub.innerText = child.certModalSub;
 
   // Render Pedigree Tree, Education, Certifications, Curriculum
   renderFamilyTreeVisual(child.familyTree);
@@ -1631,7 +1660,7 @@ function initModals() {
       openLightbox(
         'assets/family_portrait.jpg',
         'The Tan Medical Dynasty — Ancestral Study Desk',
-        'Displayed in the study of Dr. Marcus Tan: Three generations of clinical surgical leaders in Singapore. The grandfather, Prof. K.L. Tan (seated center in white coat and stethoscope), established the family trust that funded Leo’s instant transmission.'
+        'Displayed in the study of Dr. Marcus Tan: Three generations of clinical surgical leaders in Singapore. The grandfather, Prof. K.L. Tan (seated center in white coat and stethoscope), established the family trust that funded Ryan’s instant transmission.'
       );
     });
   }
@@ -1670,8 +1699,21 @@ function closeLightbox() {
   if (modal) modal.classList.remove('open');
 }
 
+function openCurrentCandidateCertLightbox() {
+  const child = childrenData[state.currentChild] || childrenData.ryan;
+  if (!child) return;
+  openLightbox(child.certImage, child.certLightboxTitle, child.certLightboxDesc);
+}
+
 function openCertModal() {
+  const child = childrenData[state.currentChild] || childrenData.ryan;
   const modal = document.getElementById('certificateModal');
+  const fullImg = document.getElementById('certModalFullImg');
+  const capTitle = document.getElementById('certModalCaptionTitle');
+  const capSub = document.getElementById('certModalCaptionSub');
+  if (fullImg && child && child.certImage) fullImg.src = child.certImage;
+  if (capTitle && child && child.certModalTitle) capTitle.innerText = child.certModalTitle;
+  if (capSub && child && child.certModalSub) capSub.innerText = child.certModalSub;
   if (modal) modal.classList.add('open');
 }
 
