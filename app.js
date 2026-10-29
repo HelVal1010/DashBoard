@@ -427,16 +427,13 @@ document.addEventListener('DOMContentLoaded', () => {
 function initLenis() {
   if (typeof Lenis !== 'undefined') {
     state.lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true
+      lerp: 0.1, // Linear interpolation damping: instant 1:1 reaction (no ease-in), smooth deceleration glide (ease-out)
+      smoothWheel: true,
+      syncTouch: false, // Preserves native momentum without artificial ramp-up
+      wheelMultiplier: 1,
+      touchMultiplier: 1,
+      easing: (t) => 1 - Math.pow(1 - t, 3) // Pure ease-out cubic for programmatic scrollTo (maximum initial velocity, gentle stop)
     });
-
-    function raf(time) {
-      if (state.lenis) state.lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
 
     if (typeof ScrollTrigger !== 'undefined' && state.lenis) {
       state.lenis.on('scroll', ScrollTrigger.update);
@@ -444,6 +441,12 @@ function initLenis() {
         state.lenis.raf(time * 1000);
       });
       gsap.ticker.lagSmoothing(0);
+    } else {
+      function raf(time) {
+        if (state.lenis) state.lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
     }
   }
 }
@@ -494,7 +497,11 @@ function initViewSwitcher() {
     navLogo.addEventListener('click', (e) => {
       e.preventDefault();
       switchView('website');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (state.lenis) {
+        state.lenis.scrollTo(0, { immediate: false });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }
     });
   }
 
@@ -513,7 +520,7 @@ function initViewSwitcher() {
           if (state.lenis) {
             state.lenis.scrollTo(targetEl, { offset: -70 });
           } else {
-            targetEl.scrollIntoView({ behavior: 'smooth' });
+            targetEl.scrollIntoView({ behavior: 'auto' });
           }
         }
         publicNavLinks.forEach(l => l.classList.remove('active'));
@@ -556,7 +563,11 @@ function switchView(viewName, targetTab = null, childKey = null) {
     // Request 1: Dynamic seamless page background color shift
     updateDynamicBackground();
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (state.lenis) {
+      state.lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
   } else {
     if (viewWebsite) viewWebsite.style.display = 'none';
     if (viewPortal) viewPortal.style.display = 'block';
@@ -587,7 +598,11 @@ function switchView(viewName, targetTab = null, childKey = null) {
       if (state.charts.timeline) state.charts.timeline.resize();
     }, 100);
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (state.lenis) {
+      state.lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
   }
 
   if (window.lucide) window.lucide.createIcons();
