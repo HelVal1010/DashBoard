@@ -14,7 +14,15 @@ const state = {
     roi: null,
     timeline: null
   },
-  brainAnimationId: null
+  brainAnimationId: null,
+  displayMode: {
+    active: false,
+    timer: null,
+    currentIndex: 0,
+    intervalMs: 5000,
+    sections: [],
+    showHud: false // Hidden by default for clean presentation
+  }
 };
 
 // Monitored Successors Database (Fictional Speculative Design Lineage)
@@ -414,6 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDynamicBackgroundShifter();
   initHeroParallax();
   initCounterAnimations();
+  initDisplayMode();
 
   // Load Ryan Tan default profile
   loadChildProfile('ryan');
@@ -569,6 +578,11 @@ function switchView(viewName, targetTab = null, childKey = null) {
       window.scrollTo({ top: 0, behavior: 'auto' });
     }
   } else {
+    // If leaving website view, exit display mode
+    if (state.displayMode && state.displayMode.active) {
+      stopDisplayMode();
+    }
+
     if (viewWebsite) viewWebsite.style.display = 'none';
     if (viewPortal) viewPortal.style.display = 'block';
     if (btnWebsite) btnWebsite.classList.remove('active');
@@ -1735,4 +1749,212 @@ function openCertModal() {
 function closeCertModal() {
   const modal = document.getElementById('certificateModal');
   if (modal) modal.classList.remove('open');
+}
+
+/**
+ * =========================================================================
+ * DISPLAY MODE (KIOSK / PRESENTATION AUTO-SCROLL ON '=' KEY)
+ * =========================================================================
+ */
+function initDisplayMode() {
+  window.addEventListener('keydown', (e) => {
+    // Ignore when typing in input, textarea, or contentEditable elements
+    const tag = document.activeElement?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || document.activeElement?.isContentEditable) {
+      return;
+    }
+
+    if (e.key === '=' || e.key === '+' || e.code === 'Equal') {
+      e.preventDefault();
+      toggleDisplayMode();
+    } else if (e.key === 'Escape' && state.displayMode && state.displayMode.active) {
+      e.preventDefault();
+      stopDisplayMode();
+    } else if ((e.key === 'h' || e.key === 'H') && state.displayMode && state.displayMode.active) {
+      e.preventDefault();
+      toggleHudVisibility();
+    }
+  });
+}
+
+function toggleDisplayMode(forceState) {
+  const shouldEnable = typeof forceState === 'boolean' ? forceState : !state.displayMode.active;
+  if (shouldEnable) {
+    startDisplayMode();
+  } else {
+    stopDisplayMode();
+  }
+}
+
+function toggleHudVisibility() {
+  if (!state.displayMode) return;
+  state.displayMode.showHud = !state.displayMode.showHud;
+  const hud = document.getElementById('displayModeHud');
+  if (hud) {
+    if (state.displayMode.showHud && state.displayMode.active) {
+      hud.classList.add('active');
+    } else {
+      hud.classList.remove('active');
+    }
+  }
+}
+
+function startDisplayMode() {
+  // If not currently on website view, switch to it first
+  if (state.currentView !== 'website') {
+    switchView('website');
+  }
+
+  const sections = Array.from(document.querySelectorAll('#view-website > section'));
+  if (!sections.length) return;
+
+  state.displayMode.sections = sections;
+  state.displayMode.active = true;
+  state.displayMode.showHud = false; // Hidden by default as requested
+
+  // Build HUD if not already present
+  let hud = document.getElementById('displayModeHud');
+  if (!hud) {
+    hud = document.createElement('div');
+    hud.id = 'displayModeHud';
+    hud.className = 'display-mode-hud';
+    hud.innerHTML = `
+      <div class="dm-hud-inner">
+        <div class="dm-pill-badge">
+          <span class="dm-pulsing-dot"></span>
+          <span class="dm-label">DISPLAY MODE</span>
+        </div>
+        <div class="dm-divider"></div>
+        <div class="dm-section-cluster">
+          <span class="dm-sec-number" id="dmSectionNum">01 / 06</span>
+          <span class="dm-sec-title" id="dmSectionTitle">OVERVIEW</span>
+        </div>
+        <div class="dm-divider"></div>
+        <button class="dm-exit-btn" id="dmExitBtn" title="Exit Display Mode (or press =)">
+          <span>Exit</span>
+          <kbd class="dm-kbd">=</kbd>
+        </button>
+        <div class="dm-progress-track">
+          <div class="dm-progress-bar" id="dmProgressBar"></div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(hud);
+
+    document.getElementById('dmExitBtn')?.addEventListener('click', () => {
+      stopDisplayMode();
+    });
+  }
+
+  // Ensure HUD stays hidden by default for clean presentation
+  hud.classList.remove('active');
+
+  // Start from section 0 (hero)
+  goToDisplaySection(0);
+
+  // Setup recurring 5-second interval
+  if (state.displayMode.timer) clearInterval(state.displayMode.timer);
+  state.displayMode.timer = setInterval(() => {
+    if (!state.displayMode.active) {
+      clearInterval(state.displayMode.timer);
+      return;
+    }
+    const nextIdx = (state.displayMode.currentIndex + 1) % state.displayMode.sections.length;
+    goToDisplaySection(nextIdx);
+  }, 5000);
+}
+
+function stopDisplayMode() {
+  state.displayMode.active = false;
+  if (state.displayMode.timer) {
+    clearInterval(state.displayMode.timer);
+    state.displayMode.timer = null;
+  }
+
+  const hud = document.getElementById('displayModeHud');
+  if (hud) {
+    hud.classList.remove('active');
+    const progressBar = document.getElementById('dmProgressBar');
+    if (progressBar) {
+      progressBar.style.transition = 'none';
+      progressBar.style.width = '0%';
+    }
+  }
+}
+
+function goToDisplaySection(index) {
+  state.displayMode.currentIndex = index;
+  const sections = state.displayMode.sections;
+  const sec = sections[index];
+  if (!sec) return;
+
+  // Update HUD text
+  const numEl = document.getElementById('dmSectionNum');
+  const titleEl = document.getElementById('dmSectionTitle');
+  if (numEl) {
+    numEl.textContent = `${String(index + 1).padStart(2, '0')} / ${String(sections.length).padStart(2, '0')}`;
+  }
+  if (titleEl) {
+    titleEl.textContent = getDisplaySectionTitle(sec, index);
+  }
+
+  // Animate 5-second progress bar
+  const progressBar = document.getElementById('dmProgressBar');
+  if (progressBar) {
+    progressBar.style.transition = 'none';
+    progressBar.style.width = '0%';
+    void progressBar.offsetWidth; // Force DOM reflow
+    progressBar.style.transition = 'width 5000ms linear';
+    progressBar.style.width = '100%';
+  }
+
+  // Smoothly center on the section
+  scrollAndCenterSection(sec);
+}
+
+function getDisplaySectionTitle(sec, index) {
+  if (sec.id === 'hero-website') return 'HEIRLOOM OVERVIEW';
+  const kicker = sec.querySelector('.quote-kicker');
+  if (kicker) return kicker.textContent.trim().toUpperCase();
+  const badge = sec.querySelector('.section-badge-amber');
+  if (badge) {
+    return badge.textContent.replace(/^\d+[\s—\-\.]*/, '').trim().toUpperCase();
+  }
+  const heading = sec.querySelector('h1, h2, .section-title-serif');
+  if (heading) {
+    return heading.textContent.trim().slice(0, 24).toUpperCase();
+  }
+  return `SECTION 0${index + 1}`;
+}
+
+function scrollAndCenterSection(section) {
+  if (!section) return;
+  const rect = section.getBoundingClientRect();
+  const currentScroll = window.scrollY || window.pageYOffset;
+  const sectionTop = rect.top + currentScroll;
+  const sectionHeight = section.offsetHeight;
+  const viewportHeight = window.innerHeight;
+
+  let targetY;
+  if (section.id === 'hero-website' || sectionTop < 40) {
+    targetY = 0;
+  } else if (sectionHeight >= viewportHeight - 80) {
+    // Section is taller than or close to viewport height: top-align with header clearance
+    targetY = Math.max(0, sectionTop - 70);
+  } else {
+    // Section is shorter: vertically center it in the screen
+    targetY = Math.max(0, sectionTop - (viewportHeight - sectionHeight) / 2);
+  }
+
+  if (state.lenis) {
+    state.lenis.scrollTo(targetY, {
+      duration: 1.2,
+      easing: (t) => 1 - Math.pow(1 - t, 3)
+    });
+  } else {
+    window.scrollTo({
+      top: targetY,
+      behavior: 'smooth'
+    });
+  }
 }
